@@ -5,5 +5,5 @@
   "start_url": "https://ecc521.github.io/tuner",
   "background_color": "",
   "theme_color": "",
-  "display": ""
+  "display": "standalone"
 }
