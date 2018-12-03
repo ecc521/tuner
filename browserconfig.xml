@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<browserconfig>
+  <msapplication>
+    <tile>
+      <square70x70logo src="/tuner/images/70x70-eighth-note.png"/>
+      <square150x150logo src="/tuner/images/150x150-eighth-note.png"/>
+      <square310x310logo src="/tuner/images/310x310-eighth-note.png"/>
+      <TileColor>#000080</TileColor>
+      <TileImage src="/tuner/images/150x150-eighth-note.png" />
+    </tile>
+  </msapplication>
+</browserconfig>
