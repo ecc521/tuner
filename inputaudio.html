@@ -1,0 +1,137 @@
+<p id="names"></p>
+<p id="frequencies"></p>
+
+
+<script>
+function getid(n){return document.getElementById(n)}
+    
+function genscale() {
+    //Equal tempered scale
+    let notes = []
+    let names = "C,C#,D,Eb,E,F,F#,G,Ab,A,Bb,B".split(",")
+    let A4pos = 58
+    for (let i=0;i<11;i++) {
+        for (let c=0;c<names.length;c++) {
+            let name = names[c] + i                
+            let freq = window.A4*(2**((((i*12) + (c+1))-A4pos)/12)) //Just... Don't ask
+            if (freq <= 24000) {
+                notes.push({name:name, freq:freq})
+            }
+        }
+    }
+    return notes
+}
+
+window.A4 = 440
+window.notes = genscale()
+
+
+
+window.AudioContext = window.AudioContext || window.webkitAudioContext;
+let ctx = new AudioContext()
+
+
+;(async function() {
+    stream = await navigator.mediaDevices.getUserMedia({audio:true, video:false});
+    source = ctx.createMediaStreamSource(stream);
+    
+    analyzer = ctx.createAnalyser()
+    analyzer.maxDecibels = -1
+    analyzer.minDecibels = -100
+    analyzer.fftSize = 32768
+    
+    source.connect(analyzer)
+    //analyzer.connect(ctx.destination)
+   
+    freq = new Float32Array(analyzer.frequencyBinCount)  
+    time = new Float32Array(analyzer.frequencyBinCount)  
+
+    calc()
+    
+    console.log(stream)
+    console.log(source)
+    
+    
+}())
+
+    
+    
+function updatefrequency(pitches) {
+    let top = pitches.slice(-5) //The number is the amount of loudest notes you want
+    
+    for (let i=0;i<top.length;i++) {
+        top[i] = top[i].freq
+    }
+    
+    
+    //Sometimes this picks up the note an octave higher as the first one, and the actual note second or third
+    //Check the top 5 and pick a lower note that is a factor of 2 lower if possible
+    
+   /* let newtop = []
+    for (let i=0;i<top.length;i++) {
+        newtop.push(top[i]/top[0])
+    }
+    
+    let replacements = []
+    for (let i=0;i<newtop.length;i++) {
+        if (newtop[i] > 0.47 && newtop[i] < 0.53) {
+            replacements = [newtop[i]*top[0]]
+        }
+    }
+    
+    if (replacements.length === 0) {replacements[0] = top[0]}
+    top = replacements*/
+    
+    
+
+    getid("frequencies").innerHTML = "Loudest Frequencies: " + top
+    
+    let names = []
+    for (let i=0;i<top.length;i++) {
+        let note = top[i]
+        note = Math.log2(note/440)*12
+        note = Math.round(note)
+        note += 57
+        note = notes[note]
+        
+        names.push(note.name)
+    }
+    
+    
+    getid("names").innerHTML = "Are you trying to play: " + names
+}    
+    
+    
+    
+    
+function calc() {
+    analyzer.getFloatFrequencyData(freq)    
+    
+    let scale = 24000/freq.length
+  
+    let values = []
+    for (let i=0;i<freq.length;i++) {
+        values.push({freq:i*scale, loud:freq[i]})
+    }
+    
+    function volume(a,b) {
+        if (a.loud > b.loud) {return 1}
+        if (b.loud > a.loud) {return -1}
+        return 0
+    }
+    
+    values = values.sort(volume)
+    //The highest indexes are the loudest sounds
+    
+    
+    
+    //Call functions with our generated values
+    try {
+        updatefrequency(values)
+    }catch(e){console.error(e)}
+    
+    requestAnimationFrame(calc)
+}
+
+
+</script>

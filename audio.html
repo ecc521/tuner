@@ -1,0 +1,70 @@
+<input id="freq" type="number" onchange="freq()">
+
+
+<script>
+    
+    
+function genscale(A4) {
+    //Equal tempered scale
+    let notes = {}
+    let names = "C,C#,D,Eb,E,F,F#,G,Ab,A,B,Bb".split(",")
+    let A4pos = 58
+    for (let i=0;i<11;i++) {
+        for (let c=0;c<names.length;c++) {
+            let name = names[c] + i                
+            let freq = A4*(2**((((i*12) + (c+1))-A4pos)/12)) //Just... Don't ask
+            if (freq < 20000) {
+                notes[name] = freq
+            }
+        }
+    }
+    return notes
+}
+
+
+let notes = genscale(440)
+
+
+
+    
+let ctx = new AudioContext()
+
+
+let gain = ctx.createGain()
+gain.connect(ctx.destination)
+gain.gain.value = 1;
+
+let osc = ctx.createOscillator();
+
+osc.connect(gain);  
+let types = ["sine","triangle","sawtooth","square"]
+osc.type = "sine"
+osc.start()
+
+    
+    
+    
+function getid(n){return document.getElementById(n)}
+let wait = ms => new Promise((r, j)=>setTimeout(r, ms))
+    
+
+function freq() {
+    let value = getid("freq").value
+    value = Math.max(20, value)
+    value = Math.min(value, 20000)
+    getid("freq").value = value
+    osc.frequency.value = value
+}
+    
+    
+(async function(){
+    for (let i=0;i<5;i = (i+1)%4) {
+        osc.type = types[i]
+        await wait(2000)
+    }
+}())
+    
+    
+    
+
+</script>
