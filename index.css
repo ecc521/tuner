@@ -1,7 +1,16 @@
+html, body {
+    margin:0;
+}
+
 .navbar {
     background-color: #333;
     overflow: hidden;
     position: fixed;
     bottom: 0;
     width: 100%;
+}
+
+.navbaricon {
+    width:20px;
+    height:20px;
 }
