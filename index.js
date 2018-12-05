@@ -16,6 +16,7 @@ let displaynavbar = function() {
   
   let img = document.createElement("img")
   img.src = "/tuner/images/settings.png"
+  img.className = "navbaricon"
   navbar.appendChild(img)
   document.body.appendChild(navbar)
 }
