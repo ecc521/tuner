@@ -10,7 +10,9 @@ window.AudioContext = window.AudioContext || window.webkitAudioContext
 
 
 
-let navbar = function() {
+let displaynavbar = function() {
+  let navbar = document.createElement("span")
+  
   let img = document.createElement("img")
   img.src = "/tuner/images/settings.png"
   document.body.appendChild(img)
