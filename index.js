@@ -36,7 +36,7 @@ let displaynavbar = function() {
   for (let i=0;i<pages.length;i++) {
     let item = pages[i]
     
-    let button = document.createElement("btn")
+    let button = document.createElement("button")
     button.addEventListener("click", item.draw)
     
     let img = document.createElement("img")
