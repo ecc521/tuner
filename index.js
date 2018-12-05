@@ -28,7 +28,7 @@ let displaynavbar = function() {
     {
       draw:opengenerator,
       text:"Generator",
-      icon:""
+      icon:"/tuner/images/speaker.png"
     }           
   ]
   
