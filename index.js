@@ -2,42 +2,60 @@ if ('serviceWorker' in navigator) {
   navigator.serviceWorker.register('/tuner/sw.js');
 }
 
-window.AudioContext = window.AudioContext || window.webkitAudioContext
 
-
-
-
-function opentuner() {
-  alert("Tuner under development")
+function setpage(url) {
+  //Clear open content
+  let elems = document.querySelectorAll(".maincontent")
+  for (let i=0;i<elems.length;i++) {
+    console.log(elems[i])
+    elems[i].remove()
+  }
+  
+  let iframe = document.createElement("iframe")
+  iframe.className = "maincontent"
+  iframe.src = url
+  document.body.appendChild(iframe)  
 }
 
-function opengenerator() {
-  alert("Note Generator under development")
-}
 
+
+
+
+
+// Need to add closing pages
+let pages = [
+  {
+    url:"/tuner/inputaudio.html",
+    text:"Tune",
+    icon:"/tuner/images/microphone.png"
+  },
+  {
+    url:"/tuner/audio.html",
+    text:"Listen",
+    icon:"/tuner/images/speaker.png"
+  },
+  {
+    url:"",
+    text:"Settings",
+    icon:"/tuner/images/settings.png"
+  }
+]
+  
+  
+  
 let displaynavbar = function() {
   let navbar = document.createElement("div")
   navbar.className = "navbar"
-  
-  let pages = [
-    {
-      draw:opentuner,
-      text:"Tuner",
-      icon:"/tuner/images/settings.png"
-    },
-    {
-      draw:opengenerator,
-      text:"Generator",
-      icon:"/tuner/images/speaker.png"
-    }           
-  ]
   
   
   for (let i=0;i<pages.length;i++) {
     let item = pages[i]
     
     let button = document.createElement("button")
-    button.addEventListener("click", item.draw)
+    button.className = "navbaritem"
+    button.addEventListener("click", function(){
+      setpage(pages[i].url)
+    })
     
     let img = document.createElement("img")
     img.src = item.icon
