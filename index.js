@@ -20,4 +20,4 @@ let displaynavbar = function() {
   document.body.appendChild(navbar)
 }
 
-navbar()
+displaynavbar()
