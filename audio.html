@@ -37,11 +37,13 @@ function setactive(boolean) {
     
 setactive(false)
     
-getid("control").addEventListener("click", function(){
+function toggleactive() {
     console.log(window.active)
     console.log(!window.active)
     setactive(!window.active)
-})
+}
+    
+getid("control").addEventListener("click", toggleactive)
     
     
   
