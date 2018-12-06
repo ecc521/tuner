@@ -25,19 +25,24 @@ function setpage(url) {
 // Need to add closing pages
 let pages = [
   {
-    url:"/tuner/inputaudio.html",
+    url:"/tuner/tune.html",
     text:"Tune",
     icon:"/tuner/images/microphone.png"
   },
   {
-    url:"/tuner/audio.html",
+    url:"/tuner/listen.html",
     text:"Listen",
     icon:"/tuner/images/speaker.png"
   },
   {
-    url:"",
+    url:"/tuner/settings.html",
     text:"Settings",
     icon:"/tuner/images/settings.png"
+  },
+  {
+    url:"/tuner/more.html",
+    text:"More",
+    icontext:"☰"
   }
 ]
   
@@ -57,9 +62,17 @@ let displaynavbar = function() {
       setpage(pages[i].url)
     })
     
-    let img = document.createElement("img")
-    img.src = item.icon
-    img.className = "navitemicon"
+    let img;
+    if (item.icon) {
+      img = document.createElement("img")
+      img.src = item.icon
+      img.className = "navitemicon"
+    }
+    else {
+      img = document.createElement("p")
+      img.innerHTML = item.icontext
+      img.style.fontSize = "20px"
+    }
     
     let p = document.createElement("p")
     p.innerHTML = item.text
