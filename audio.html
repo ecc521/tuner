@@ -38,6 +38,8 @@ function setactive(boolean) {
 setactive(false)
     
 getid("control").addEventListener("click", function(){
+    console.log(window.active)
+    console.log(!window.active)
     setactive(!window.active)
 })
     
