@@ -13,7 +13,7 @@ function notefreq(name) {
 window.AudioContext = window.AudioContext || window.webkitAudioContext
 let ctx = new AudioContext()
 
-let osc = ctx.createOscillator();
+window.osc = ctx.createOscillator();
 osc.type = "sine"
      
 
