@@ -2,7 +2,7 @@
 
 
 <script>
-    
+
 console.log(parent)
     
 function genscale(A4) {
@@ -27,25 +27,29 @@ let notes = genscale(440)
 
 
 
-    
+window.AudioContext = window.AudioContext || window.webkitAudioContext
 let ctx = new AudioContext()
-
-
-let gain = ctx.createGain()
-gain.connect(ctx.destination)
-gain.gain.value = 1;
 
 let osc = ctx.createOscillator();
 
-osc.connect(gain);  
+osc.connect(ctx.destination);  
 osc.type = "sine"
 osc.start()
 
     
-    
-    
+ 
+
+function setactive(boolean) {
+  if (boolean) {
+    self.active = true
+  } 
+  else {
+    self.active = false
+  }
+}
+  
+  
 function getid(n){return document.getElementById(n)}
-let wait = ms => new Promise((r, j)=>setTimeout(r, ms))
     
 
 function freq() {
@@ -55,6 +59,10 @@ function freq() {
     getid("freq").value = value
     osc.frequency.value = value
 }
+    
+    
+
+    
     
     
 
