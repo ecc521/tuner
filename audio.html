@@ -3,29 +3,11 @@
 
 <script>
 
-console.log(parent)
-    
-function genscale(A4) {
-    //Equal tempered scale
-    let notes = {}
-    let names = "C,C#,D,Eb,E,F,F#,G,Ab,A,B,Bb".split(",")
-    let A4pos = 58
-    for (let i=0;i<11;i++) {
-        for (let c=0;c<names.length;c++) {
-            let name = names[c] + i                
-            let freq = A4*(2**((((i*12) + (c+1))-A4pos)/12)) //Just... Don't ask
-            if (freq < 20000) {
-                notes[name] = freq
-            }
-        }
-    }
-    return notes
+
+function notefreq(name) {
+    //Turn the note name into name and octave
+    parent.notefromname(name.slice(0,1), name.slice(1))
 }
-
-
-let notes = genscale(440)
-
-
 
 window.AudioContext = window.AudioContext || window.webkitAudioContext
 let ctx = new AudioContext()
