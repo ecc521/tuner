@@ -35,7 +35,11 @@ function setactive(boolean) {
   }
 }
     
-setactive(false)
+try {
+    setactive(false) //This always throws "cannot call stop without calling start first"
+}
+catch(e) {}
+    
     
 function toggleactive() {
     console.log(window.active)
