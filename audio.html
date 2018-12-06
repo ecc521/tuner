@@ -9,7 +9,7 @@ function notefreq(name) {
     //Turn the note name into name and octave
     parent.notefromname(name.slice(0,1), name.slice(1))
 }
-
+try {
 window.AudioContext = window.AudioContext || window.webkitAudioContext
 let ctx = new AudioContext()
 
@@ -36,13 +36,12 @@ setactive(false)
 osc.start()
 
     
-function toggleactive() {
+getid("control").addEventListener("click", function() {
     setactive(!window.active)
+})
+    
 }
-    
-getid("control").addEventListener("click", toggleactive)
-    
-    
+    catch (e) {console.error(e)}
   
   
     
