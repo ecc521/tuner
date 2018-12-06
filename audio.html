@@ -1,8 +1,9 @@
 <input id="freq" type="number" onchange="freq()">
-
+<button id="control"></button>
 
 <script>
 
+function getid(n){return document.getElementById(n)}
 
 function notefreq(name) {
     //Turn the note name into name and octave
@@ -16,29 +17,33 @@ let osc = ctx.createOscillator();
 
 osc.connect(ctx.destination);  
 osc.type = "sine"
-osc.start()
 
     
  
 
 function setactive(boolean) {
+  let control = getid("control")
   if (boolean) {
+    control.innerHTML = "Stop"
     window.active = true
     osc.start()
   } 
   else {
+    control.innerHTML = "Play"
     window.active = false
     osc.stop()
   }
 }
     
-setactive(true)
+setactive(false)
     
+getid("control").addEventListener("click", function(){
+    setactive(!window.active)
+})
     
     
   
   
-function getid(n){return document.getElementById(n)}
     
 
 function freq() {
