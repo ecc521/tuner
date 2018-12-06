@@ -48,7 +48,7 @@ function freq() {
     value = Math.max(20, value)
     value = Math.min(value, 20000)
     getid("freq").value = value
-    osc.frequency.value = value
+    osc.frequency.value = value //Uncaught ReferenceError: osc is not defined
 }
     
     
