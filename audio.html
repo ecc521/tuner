@@ -37,7 +37,6 @@ gain.gain.value = 1;
 let osc = ctx.createOscillator();
 
 osc.connect(gain);  
-let types = ["sine","triangle","sawtooth","square"]
 osc.type = "sine"
 osc.start()
 
@@ -55,15 +54,6 @@ function freq() {
     getid("freq").value = value
     osc.frequency.value = value
 }
-    
-    
-(async function(){
-    for (let i=0;i<5;i = (i+1)%4) {
-        osc.type = types[i]
-        await wait(2000)
-    }
-}())
-    
     
     
 
