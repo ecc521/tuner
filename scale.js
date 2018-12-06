@@ -15,13 +15,12 @@ let tunepitch = getitem("tunepitch") || 440
 let scale = getitem("notenames") || "C,C#,D,Eb,E,F,F#,G,Ab,A,B,Bb"
 scale = scale.split(",")
     
-    
-    
+window.notenames = scale
     
     
     
 //Alternate note names
-let altnames = {
+window.altnames = {
     "C#":"Db",
     "Db":"C#",
     "D#":"Eb",
