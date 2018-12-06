@@ -23,12 +23,19 @@ osc.start()
 
 function setactive(boolean) {
   if (boolean) {
-    self.active = true
+    window.active = true
+    osc.start()
   } 
   else {
-    self.active = false
+    window.active = false
+    osc.stop()
   }
 }
+    
+setactive(true)
+    
+    
+    
   
   
 function getid(n){return document.getElementById(n)}
