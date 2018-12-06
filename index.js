@@ -42,7 +42,7 @@ let pages = [
   {
     url:"/tuner/more.html",
     text:"More",
-    icontext:"☰"
+    icon:""
   }
 ]
   
@@ -62,17 +62,10 @@ let displaynavbar = function() {
       setpage(pages[i].url)
     })
     
-    let img;
-    if (item.icon) {
-      img = document.createElement("img")
-      img.src = item.icon
-      img.className = "navitemicon"
-    }
-    else {
-      img = document.createElement("p")
-      img.innerHTML = item.icontext
-      img.style.fontSize = "20px"
-    }
+    let img = document.createElement("img")
+    img.src = item.icon
+    img.className = "navitemicon"
+
     
     let p = document.createElement("p")
     p.innerHTML = item.text
