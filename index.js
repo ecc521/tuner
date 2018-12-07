@@ -42,7 +42,7 @@ let pages = [
   {
     url:"/tuner/more.html",
     text:"More",
-    icon:""
+    icon:"/tuner/images/hamburgericon.png"
   }
 ]
   
