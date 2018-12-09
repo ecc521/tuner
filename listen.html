@@ -22,19 +22,34 @@ function setactive(boolean) {
   if (boolean) {
     control.innerHTML = "Stop"
     window.active = true
-    osc.connect(ctx.destination);  
+    ctx.resume()
   } 
   else {
     control.innerHTML = "Play"
     window.active = false
-    osc.disconnect(ctx.destination);  
+    ctx.suspend() 
   }
 }
 
-osc.connect(ctx.destination); //Prevent error on next line: DOM Exception: the given destination is not connected.
-setactive(false)
-osc.start()
+    
+let init = new Promise(function(resolve,reject){
+    if (ctx.state === "suspended") {
+        resolve()
+    }
+    else {
+        ctx.suspend.then(resolve)
+    }
+})
 
+init.then(function(){
+    osc.connect(ctx.destination);
+    osc.start()
+})
+
+
+
+    
+    
     
 getid("control").addEventListener("click", function() {
     setactive(!window.active)
