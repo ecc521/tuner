@@ -33,11 +33,14 @@ function setactive(boolean) {
     //without explicit user direction
       
     return new Promise(function(resolve,reject){
-        //We don't want it to reject if the context is created suspended - like it is on Safari
-        //FOR TESTING: Firefox Quantum appears to create context suspended, then unsuspend it?
-        //Try sending a call to suspend
         if (ctx.state === "suspended") {
-            ctx.suspend().catch(function(){}) //FOR TESTING. Read Above
+            //We don't want to log an error if the context is created suspended - like it is on Safari
+            //However Firefox Quantum appears to create context in suspended state, then unsuspend it
+            //We will call suspend so the context isn't unsuspended, and just ignore any errors
+            ctx.suspend().catch(function(){}) //Firefox
+            //I haven't encountered an issue Firefox where this promise resolves before the context is suspended
+            //Causing noise to be made. May be because we are just stopping it from being unsuspended. 
+            //If it turns out to be an issue, this may have to be changed.
             resolve()
         }
         else {
