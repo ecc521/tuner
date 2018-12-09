@@ -22,33 +22,37 @@ function setactive(boolean) {
   if (boolean) {
     control.innerHTML = "Stop"
     window.active = true
-    ctx.resume()
+    return ctx.resume()
   } 
   else {
     control.innerHTML = "Play"
     window.active = false
-    ctx.suspend() 
+      
+    //I would love to be able to use start and stop on the Oscillator Node, but
+    //Safari creates AudioContext's in the suspended state, and doesn't let you resume them
+    //without explicit user direction
+      
+    return new Promise(function(resolve,reject){
+        //We don't want it to reject if the context is created suspended - like it is on Safari
+        if (ctx.state === "suspended") {
+            resolve()
+        }
+        else {
+            ctx.suspend().then(resolve)
+        }
+    })
+      
   }
 }
 
-    
-let init = new Promise(function(resolve,reject){
-    if (ctx.state === "suspended") {
-        resolve()
-    }
-    else {
-        ctx.suspend.then(resolve)
-    }
-})
 
-init.then(function(){
+setactive(false).then(function(){
+    //We need to wait so that we don't give them a loud suprise
     osc.connect(ctx.destination);
     osc.start()
 })
 
-
-
-    
+  
     
     
 getid("control").addEventListener("click", function() {
