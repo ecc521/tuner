@@ -34,7 +34,10 @@ function setactive(boolean) {
       
     return new Promise(function(resolve,reject){
         //We don't want it to reject if the context is created suspended - like it is on Safari
+        //FOR TESTING: Firefox Quantum appears to create context suspended, then unsuspend it?
+        //Try sending a call to suspend
         if (ctx.state === "suspended") {
+            ctx.suspend().catch(function(){}) //FOR TESTING. Read Above
             resolve()
         }
         else {
