@@ -1,6 +1,38 @@
 <input id="freq" placeholder="Type Frequency (Hertz)" type="number" onchange="freq()">
 <button id="control"></button>
 
+<style>
+    #octagon {
+      width: 20px;
+      height: 20px;
+      background: red;
+      position: relative;
+    }
+    #octagon:before {
+      content: "";
+      width: 20px;
+      height: 0;
+      position: absolute;
+      top: 0;
+      left: 0;
+      border-bottom: 5.8px solid red;
+      border-left: 5.8px solid #eee;
+      border-right: 5.8px solid #eee;
+    }
+    #octagon:after {
+      content: "";
+      width: 20px;
+      height: 0;
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      border-top: 5.8px solid red;
+      border-left: 5.8px solid #eee;
+      border-right: 5.8px solid #eee;
+    }  
+</style>
+
+
 <script>
 
 function getid(n){return document.getElementById(n)}
@@ -20,7 +52,7 @@ osc.type = "sine"
 function setactive(boolean) {
   let control = getid("control")
   if (boolean) {
-    control.innerHTML = "Stop"
+    control.innerHTML = "<div id=/"octagon/"></div>Stop"
     window.active = true
     return ctx.resume()
   } 
