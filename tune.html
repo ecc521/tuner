@@ -57,7 +57,7 @@ let ctx = new AudioContext()
     
     
 function updatefrequency(pitches) {
-    let top = pitches.slice(-5) //The number is the amount of loudest notes you want
+    let top = pitches.slice(-1) //The number is the amount of loudest notes you want
     
     for (let i=0;i<top.length;i++) {
         top[i] = top[i].freq
@@ -67,7 +67,7 @@ function updatefrequency(pitches) {
     //Sometimes this picks up the note an octave higher as the first one, and the actual note second or third
     //Check the top 5 and pick a lower note that is a factor of 2 lower if possible
     
-   /* let newtop = []
+    /*let newtop = []
     for (let i=0;i<top.length;i++) {
         newtop.push(top[i]/top[0])
     }
@@ -98,7 +98,7 @@ function updatefrequency(pitches) {
     }
     
     
-    getid("names").innerHTML = "Are you trying to play: " + names
+    getid("names").innerHTML = "It looks like you are trying to play: " + names
 }    
     
     
