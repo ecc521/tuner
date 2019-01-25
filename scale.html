@@ -1,0 +1,151 @@
+<script>
+
+let settings = {
+    scaletype: "equal-octave",
+    A4: 440,
+    notenames: ["A","B","Bb","C","C#","D","Eb","E","F","F#","G","Ab"]
+}
+    
+    
+     
+    
+function createscale(belowa4, abovea4) {
+    
+    belowa4 = -belowa4
+    
+    //Read below. We eliminate the top and bottom element
+    belowa4 -= 1
+    abovea4 += 1
+    
+    
+    
+    
+    
+    let scale = []
+    if (settings.scaletype === "equal-octave") {
+        
+        for (let i=belowa4;i<abovea4;i++) {
+            
+            //Handle i below 0
+            let val = i
+            if (val < 0) {
+                val = -val
+                val %= 12
+                val = 12-val
+            }
+            let name = settings.notenames[val%12]
+           
+            
+            
+            
+            scale.push({
+                //12 notes in an octave
+                name: name,
+                //This will prevent i%12 from returning a negative number, and the %12 will prevent other impacts
+                octave:Math.ceil(4 + (i/12)),
+                frequency: settings.A4*2**(i/12)
+            })
+        }
+        
+    }
+    //More scale types should be added
+    else {
+        throw "Invalid type " + scaletype
+    }
+
+    
+    
+    //Ignore the top and bottom - we can't set a range for them as we need the note above and below
+    for (let i=1;i<scale.length-1;i++) {
+        //Calculate the frequency in the middle of the two notes
+        //We could use a linear design or try to be even more accurate, but that is unnessaray
+        //But performance doesn't really matter - this is one time
+        //And accuracy doesn't really matter - these calculations will be trivially off.
+            
+        let current = Math.log2(scale[i].frequency)
+        let previous = Math.log2(scale[i-1].frequency)
+        let next = Math.log2(scale[i+1].frequency)
+            
+        scale[i].min = 2**(((current-previous)/2) + previous)
+        scale[i].max = 2**(((next-current)/2) + current)    
+    }
+    
+    
+    //The top and bottom notes don't have a minimum and maximum set.
+    scale.shift()
+    scale.pop()
+    
+    return scale;
+    
+}
+
+
+    
+    
+    
+function getnote(frequency, nocents) {
+    let i=0
+    for (;i<scale.length;i++) {
+        let item = scale[i]
+        if (frequency >= item.min && frequency <= item.max) {
+            break;
+        }
+    }
+    
+    
+    let cents;
+    
+    //There may be some performance issues with Math.log2, so add a flag to avoid calculating cents
+    if (!nocents) {
+        let current = Math.log2(frequency)
+        let ideal = Math.log2(scale[i].frequency)
+        
+        if (frequency >= scale[i].frequency) {
+            let max = Math.log2(scale[i].max)
+            let range = max-ideal
+            console.log(range)
+            console.log(current)
+            cents = 100 - ((max-current)/range*100)
+        }
+        else {
+            let min = Math.log2(scale[i].min)
+            let range = ideal-min
+            console.log(range)
+            console.log(current)
+            cents = -(100 - ((current-min)/range*100))
+        }
+    }
+    
+    
+    return {
+        name: scale[i].name,
+        octave: scale[i].octave,
+        frequency: frequency,
+        cents: cents
+    }
+}
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+window.scale = createscale(52,64)
+console.log(getnote(7041))
+console.log(getnote(7040))
+console.log(getnote(7039))
+
+  
+    
+    
+    
+    
+    
+    
+
+
+</script>
