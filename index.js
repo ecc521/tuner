@@ -1,5 +1,5 @@
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('/tuner/sw.js');
+  navigator.serviceWorker.register('sw.js');
 }
 
 
@@ -10,11 +10,11 @@ function setpage(url) {
     console.log(elems[i])
     elems[i].remove()
   }
-  
+
   let iframe = document.createElement("iframe")
   iframe.className = "maincontent"
   iframe.src = url
-  document.body.appendChild(iframe)  
+  document.body.appendChild(iframe)
 }
 
 
@@ -25,58 +25,58 @@ function setpage(url) {
 // Need to add closing pages
 let pages = [
   {
-    url:"/tuner/tune.html",
+    url:"tune.html",
     text:"Tune",
-    icon:"/tuner/images/microphone.png"
+    icon:"images/microphone.png"
   },
   {
-    url:"/tuner/listen.html",
+    url:"listen.html",
     text:"Listen",
-    icon:"/tuner/images/speaker.png"
+    icon:"images/speaker.png"
   },
   {
-    url:"/tuner/settings.html",
+    url:"settings.html",
     text:"Settings",
-    icon:"/tuner/images/settings.png"
+    icon:"images/settings.png"
   },
   {
-    url:"/tuner/more.html",
+    url:"more.html",
     text:"More",
-    icon:"/tuner/images/hamburgericon.png"
+    icon:"images/hamburgericon.png"
   }
 ]
-  
-  
-  
+
+
+
 let displaynavbar = function() {
   let navbar = document.createElement("div")
   navbar.className = "navbar"
-  
-  
+
+
   for (let i=0;i<pages.length;i++) {
     let item = pages[i]
-    
+
     let button = document.createElement("button")
     button.className = "navbaritem"
     button.addEventListener("click", function(){
       setpage(pages[i].url)
     })
-    
+
     let img = document.createElement("img")
     img.src = item.icon
     img.className = "navitemicon"
 
-    
+
     let p = document.createElement("p")
     p.innerHTML = item.text
     p.className = "navitemtext"
-    
+
     button.appendChild(img)
     button.appendChild(p)
-    
+
     navbar.appendChild(button)
   }
-  
+
 
   document.body.appendChild(navbar)
 }
