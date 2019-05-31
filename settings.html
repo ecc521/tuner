@@ -1,56 +1,37 @@
-<body></body>
+<body>Settings page is being redone. Not currently available.</body>
 <script>
 
-function savesettings() {
-  alert("Settings aren't currently saved")
+function saveNoteSettings() {
+  alert("Settings are not currently saved.")
 }
-  
-function option(obj) {
-  let container = document.createElement("div")
-  let p = document.createElement("p")
-  p.innerHTML = obj.questiontext
-  
-  container.appendChild(p)
-  
-  for (let i=0;i<obj.answers.length;i++) {
-    let radio = document.createElement("input")
-    radio.type = "radio"
-    radio.name = obj.questionname
-    radio.value  = obj.answers[i].value
-    radio.innerHTML = obj.answers[i].text
-    radio.addEventListener("click", savesettings)
-    container.appendChild(radio)
-  }
-  return container
+
+//Alternate note names
+window.altnames = {
+    "C#":"Db",
+    "Db":"C#",
+    "D#":"Eb",
+    "Eb":"D#",
+    "F#":"Gb",
+    "Gb":"F#",
+    "G#":"Ab",
+    "Ab":"G#",
+    "A#":"Bb",
+    "Bb":"A#"
 }
 
 
-  
-  
-document.body.appendChild(option({
-  questiontext: "Ab or G#",
-  questionname: "note1",
-  answers:[
-    {
-      value:"Ab",
-      text:"Ab"
-    },
-    {
-      value:"G#",
-      text:"G#"
-    }
-  
-  ]
-}))
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
+for (let property in window.altnames) {
+  let value = window.altnames[property]
+}
+
+
+
+
+
+
+
+
+
+
 
 </script>
