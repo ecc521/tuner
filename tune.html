@@ -1,6 +1,18 @@
 <p id="names"></p>
 <p id="frequencies"></p>
 
+<style>
+
+    #names {
+        /*Helvetica Neue and system-ui on mac were only fonts I found to not make text taller with flat symbol*/
+        /*Making line height significantly bigger than font-size fixes the issues with other fonts, though they still place the characters too far apart.*/
+        font-size: 20px;
+        line-height: 25px;
+        font-family: "Helvetica Neue", system-ui; /*These look the best. We can hope...*/
+    }
+
+</style>
+
 <script src="scale.js"></script>
 
 <script>
@@ -36,9 +48,7 @@ let ctx = new AudioContext()
 
 
 function updatefrequency(pitches) {
-    let top = pitches.slice(-1) //The number is the amount of loudest notes you want
-    //Note: This may order them backwards. Make sure to check how it is sorted.
-    //Not an issue when only one pitch chosen.
+    let top = pitches.slice(-1).reverse() //Get the loudest note.
 
 
     for (let i=0;i<top.length;i++) {
@@ -81,9 +91,22 @@ function calc() {
 
     let scale = 24000/freq.length
 
+
+    //Consider just making a top 5 (or top x) list with data.
     let values = []
+    let highestVolume = -Infinity
     for (let i=0;i<freq.length;i++) {
-        values.push({freq:i*scale, loud:freq[i]})
+        let volume = freq[i]
+        //Filtering out clearly unused values will reduce pressure on the sort, significantly improving performance.
+        if (volume - highestVolume < -20 || volume === -Infinity) {
+            //If the volume was 100 times quieter than the loudest sound, or if it was not heard, skip it.
+            continue;
+        }
+        else if (volume > highestVolume) {
+            highestVolume = volume
+        }
+        let frequency = i*scale
+        values.push({freq:frequency, loud:volume})
     }
 
     function volume(a,b) {
@@ -98,6 +121,9 @@ function calc() {
 
 
     //Call functions with our generated values
+
+    if (values.length === 0) {console.error("No values.")}
+
     try {
         updatefrequency(values)
     }catch(e){console.error(e)}

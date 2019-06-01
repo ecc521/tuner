@@ -4,7 +4,7 @@
 let tunepitch = localStorage.getItem("tunepitch") || 440
 
 //Names to call the notes.
-let scale = localStorage.getItem("notenames") || "C,C#,D,Eb,E,F,F#,G,Ab,A,B,Bb"
+let scale = localStorage.getItem("notenames") || "C,C♯,D,E♭,E,F,F♯,G,A♭,A,B,B♭"
 scale = scale.split(",")
 
 window.notenames = scale
@@ -13,16 +13,16 @@ window.notenames = scale
 
 //Alternate note names
 window.altnames = {
-    "C#":"Db",
-    "Db":"C#",
-    "D#":"Eb",
-    "Eb":"D#",
-    "F#":"Gb",
-    "Gb":"F#",
-    "G#":"Ab",
-    "Ab":"G#",
-    "A#":"Bb",
-    "Bb":"A#"
+    "C♯":"D♭",
+    "D♭":"C♯",
+    "D♯":"E♭",
+    "E♭":"D♯",
+    "F♯":"G♭",
+    "G♭":"F♯",
+    "G♯":"A♭",
+    "A♭":"G♯",
+    "A♯":"B♭",
+    "B♭":"A♯"
 }
 
 
