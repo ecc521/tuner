@@ -9,7 +9,7 @@ scale = scale.split(",")
 
 window.notenames = scale
 
-
+let transpose = Number(localStorage.getItem("transpose")) || 0
 
 //Alternate note names
 window.altnames = {
@@ -30,13 +30,16 @@ window.altnames = {
 
 //Create our scale
 
+let offset = 9+transpose //Position of A in array.
+
 for (let i=0;i<scale.length;i++) {
     let obj = {}
     obj.name = scale[i]
     obj.altname = altnames[obj.name]
-    obj.freq = tunepitch*(2**((i-9)/12)) //Subtract 9 as A comes in position 9 in array
-    obj.minfreq = tunepitch*(2**((i-9.5)/12))
-    obj.maxfreq = tunepitch*(2**((i-8.5)/12))
+
+    obj.freq = tunepitch*(2**((i-offset)/12))
+    obj.minfreq = tunepitch*(2**((i-offset-0.5)/12))
+    obj.maxfreq = tunepitch*(2**((i-offset+0.5)/12))
 
 
     obj.rawlog = Math.log2(obj.freq)

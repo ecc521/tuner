@@ -1,9 +1,23 @@
-<body>Settings page is being redone. Not currently available.</body>
+<body></body>
+
+<p>Number of Half steps to transpose notes from concert pitch. Positive to transpose up, negative for down.</p>
+<input type="number" placeholder="Half Steps to Transpose" id="transpose">
+
 <script>
+
+let transpose = document.getElementById("transpose")
+transpose.value = localStorage.getItem("transpose") || 0
+transpose.addEventListener("change", function() {
+  let value = transpose.value
+  localStorage.setItem("transpose", value)
+})
 
 function saveNoteSettings() {
   alert("Settings are not currently saved.")
 }
+
+
+
 
 //Alternate note names
 window.altnames = {
@@ -20,6 +34,10 @@ window.altnames = {
 }
 
 
+
+
+
+//Allow user to select what the note is called.
 for (let property in window.altnames) {
   let value = window.altnames[property]
 }

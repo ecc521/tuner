@@ -116,12 +116,15 @@ function inputnote() {
 
 //Add options to note selector
 let selector = document.getElementById("inputnote")
-for (let i=4;i<127;i++) {
+let max = 124 + Number(localStorage.getItem("transpose")) || 0 //Chosen to show highest notes in human hearing range
+//0 is 0 for a reason - otherwise octave would be negative.
+for (let i=0;i<max;i++) {
     let option = document.createElement("option")
     let name = scale[i%12].name
     let octave = Math.floor(i/12)
     option.innerHTML = name + " <sub>" + Math.floor(octave) + "</sub>"
     option.value = notefromname(name, octave).freq
+    if (option.value < 20 || option.value > 20000) {continue;} //Do not display notes outside of audible range
     selector.appendChild(option)
     if (octave === 4 && name === "A") {option.selected = true; inputnote()}
 }
