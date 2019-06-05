@@ -48,6 +48,7 @@ let pages = [
 
 
 
+
 let displaynavbar = function() {
   let navbar = document.createElement("div")
   navbar.className = "navbar"
