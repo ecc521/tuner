@@ -15,7 +15,7 @@ let transposeDirection = document.getElementById("transposeDirection")
 
 let storedValue = localStorage.getItem("transpose") || 0
 transpose.value = Math.abs(storedValue)
-transposeDirection.value = Math.sign(storedValue)
+transposeDirection.value = Math.sign(storedValue) || 1
 
 function saveTransposeSettings() {
   let value = transpose.value
