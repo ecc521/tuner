@@ -8,6 +8,10 @@
   <option value="-1">Down</option>
 </select>
 
+<p>Frequency for concert A4 (default: 440)</p>
+<input type="number" placeholder="Hertz" id="tunepitch">
+
+
 <script>
 
 let transpose = document.getElementById("transpose")
@@ -26,6 +30,32 @@ function saveTransposeSettings() {
 
 transpose.addEventListener("change", saveTransposeSettings)
 transposeDirection.addEventListener("change", saveTransposeSettings)
+
+
+
+let tunepitch = document.getElementById("tunepitch")
+tunepitch.value = localStorage.getItem("tunepitch") || 440
+
+function updateTunepitch() {
+  localStorage.setItem("tunepitch", tunepitch.value)
+}
+tunepitch.addEventListener("change", updateTunepitch)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 function saveNoteSettings() {
   alert("Settings are not currently saved.")

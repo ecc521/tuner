@@ -1,11 +1,16 @@
 <button id="tapTarget">Click Here With Each Beat</button>
-<p id="tempo"></p>
+<p id="tempoOutput"></p>
 
 
 <style>
 #tapTarget {
   width:100%;
   height:30vh;
+}
+
+#tempoOutput {
+  text-align:center;
+  font-size:45px;
 }
 </style>
 
@@ -15,7 +20,7 @@ tapTarget.addEventListener("click", tap)
 
 setInterval(updateTempo, 200)
 
-let tempoOutput = document.getElementById("tempo")
+let tempoOutput = document.getElementById("tempoOutput")
 
 let tapHistory = []
 

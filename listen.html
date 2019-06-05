@@ -126,8 +126,10 @@ for (let i=0;i<max;i++) {
     option.value = notefromname(name, octave).freq
     if (option.value < 20 || option.value > 20000) {continue;} //Do not display notes outside of audible range
     selector.appendChild(option)
-    if (octave === 4 && name === "A") {option.selected = true; inputnote()}
 }
+
+selector.value = localStorage.getItem("tunepitch") || 440
+inputnote()
 
 
 </script>
