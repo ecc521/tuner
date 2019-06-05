@@ -1,16 +1,31 @@
 <body></body>
 
-<p>Number of Half steps to transpose notes from concert pitch. Positive to transpose up, negative for down.</p>
+<p>Number of Half steps to transpose notes from concert pitch.</p>
 <input type="number" placeholder="Half Steps to Transpose" id="transpose">
+<!-- Samsung mobile devices, and possiblly some others, don't always show a negative on keypad -->
+<select id="transposeDirection">
+  <option value="1" selected>Up</option>
+  <option value="-1">Down</option>
+</select>
 
 <script>
 
 let transpose = document.getElementById("transpose")
-transpose.value = localStorage.getItem("transpose") || 0
-transpose.addEventListener("change", function() {
+let transposeDirection = document.getElementById("transposeDirection")
+
+let storedValue = localStorage.getItem("transpose") || 0
+transpose.value = Math.abs(storedValue)
+transposeDirection.value = Math.sign(storedValue)
+
+function saveTransposeSettings() {
   let value = transpose.value
+  let direction = transposeDirection.value
+  value *= Number(direction)
   localStorage.setItem("transpose", value)
-})
+}
+
+transpose.addEventListener("change", saveTransposeSettings)
+transposeDirection.addEventListener("change", saveTransposeSettings)
 
 function saveNoteSettings() {
   alert("Settings are not currently saved.")
