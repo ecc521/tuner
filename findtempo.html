@@ -1,5 +1,5 @@
 <button id="tapTarget">Click Here With Each Beat</button>
-<p id="tempoOutput"></p>
+<p id="tempoOutput">Click to Start</p>
 
 
 <style>
@@ -18,11 +18,11 @@
 let tapTarget = document.getElementById("tapTarget")
 tapTarget.addEventListener("click", tap)
 
-setInterval(updateTempo, 200)
-
 let tempoOutput = document.getElementById("tempoOutput")
 
 let tapHistory = []
+
+setInterval(updateTempo, 1000)
 
 function updateTempo() {
   let currentTime = Date.now()
@@ -32,12 +32,12 @@ function updateTempo() {
 
     console.log(tapHistory)
 
-    let bpm = tapHistory.length/((currentTime-tapHistory[0])/1000/60)
+    let bpm = (tapHistory.length-1)/((currentTime-tapHistory[0])/1000/60)
     bpm = Math.round(bpm)
 
     if (tapHistory.length === 0) {bpm = 0}
-
-    tempoOutput.innerHTML = bpm + " bpm"
+    else if (tapHistory.length === 1) {tempoOutput.innerHTML = "Click Again"}
+    else {tempoOutput.innerHTML = bpm + " bpm"}
 }
 
 
