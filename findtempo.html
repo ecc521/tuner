@@ -1,0 +1,44 @@
+<button id="tapTarget">Click Here With Each Beat</button>
+<p id="tempo"></p>
+
+
+<style>
+#tapTarget {
+  width:100%;
+  height:30vh;
+}
+</style>
+
+<script>
+let tapTarget = document.getElementById("tapTarget")
+tapTarget.addEventListener("click", tap)
+
+setInterval(updateTempo, 200)
+
+let tempoOutput = document.getElementById("tempo")
+
+let tapHistory = []
+
+function updateTempo() {
+  let currentTime = Date.now()
+
+    //TODO: Allow only using last few seconds to calculate bpm.
+    //TODO: Keep a graph of tempo to show people if they are speeding up, slowing down, ext.
+
+    console.log(tapHistory)
+
+    let bpm = tapHistory.length/((currentTime-tapHistory[0])/1000/60)
+    bpm = Math.round(bpm)
+
+    if (tapHistory.length === 0) {bpm = 0}
+
+    tempoOutput.innerHTML = bpm + " bpm"
+}
+
+
+function tap() {
+  tapHistory.push(Date.now())
+  updateTempo()
+}
+
+</script>
