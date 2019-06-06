@@ -1,1 +1,74 @@
 This page is incomplete.
+<br>
+
+<button id="control"></button>
+<style>
+
+#control {
+    font-size: 20px;
+    width:90px;
+    height:50px;
+}
+</style>
+
+<script>
+
+  window.AudioContext = window.AudioContext || window.webkitAudioContext
+  let ctx = new AudioContext()
+
+  window.osc = ctx.createOscillator();
+  osc.type = "sine"
+
+  osc.frequency.value = 440
+
+
+  function setactive(boolean) {
+    let control = document.getElementById("control")
+    if (boolean) {
+      control.innerHTML = "Stop 🛑"
+      window.active = true
+      return ctx.resume()
+    }
+    else {
+      control.innerHTML = "Play ▶️"
+      window.active = false
+
+      //I would love to be able to use start and stop on the Oscillator Node, but
+      //Safari creates AudioContext's in the suspended state, and doesn't let you resume them
+      //without explicit user direction
+
+      return new Promise(function(resolve,reject){
+          if (ctx.state === "suspended") {
+              //We don't want to log an error if the context is created suspended - like it is on Safari
+              //However Firefox Quantum appears to create context in suspended state, then unsuspend it
+              //We will call suspend so the context isn't unsuspended, and just ignore any errors
+              ctx.suspend().catch(function(){}) //Firefox
+              //I haven't encountered an issue Firefox where this promise resolves before the context is suspended
+              //Causing noise to be made. May be because we are just stopping it from being unsuspended.
+              //If it turns out to be an issue, this may have to be changed.
+              resolve()
+          }
+          else {
+              ctx.suspend().then(resolve)
+          }
+      })
+
+    }
+  }
+
+
+  setactive(false).then(function(){
+      //We need to wait so that we don't give them a loud suprise
+      osc.connect(ctx.destination);
+      osc.start()
+  })
+
+
+
+
+  document.getElementById("control").addEventListener("click", function() {
+      setactive(!window.active)
+  })
+
+
+</script>

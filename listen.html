@@ -32,8 +32,6 @@
 </style>
 <script>
 
-function getid(n){return document.getElementById(n)}
-
 function notefreq(name) {
     //Turn the note name into name and octave
     parent.notefromname(name.slice(0,1), name.slice(1))
@@ -47,7 +45,7 @@ osc.type = "sine"
 
 
 function setactive(boolean) {
-  let control = getid("control")
+  let control = document.getElementById("control")
   if (boolean) {
     control.innerHTML = "Stop 🛑"
     window.active = true
@@ -90,7 +88,7 @@ setactive(false).then(function(){
 
 
 
-getid("control").addEventListener("click", function() {
+document.getElementById("control").addEventListener("click", function() {
     setactive(!window.active)
 })
 
@@ -98,18 +96,18 @@ getid("control").addEventListener("click", function() {
 
 
 function inputfreq() {
-    let value = getid("inputfreq").value
+    let value = document.getElementById("inputfreq").value
     value = Math.max(20, value)
     value = Math.min(value, 20000)
-    getid("inputfreq").value = value
-    getid("inputnote").value = "unselected"
+    document.getElementById("inputfreq").value = value
+    document.getElementById("inputnote").value = "unselected"
     osc.frequency.value = value
 }
 
 
 function inputnote() {
-    let value = Number(getid("inputnote").value)
-    getid("inputfreq").value = Math.round(value * 10) / 10 //Round to nearest tenth place
+    let value = Number(document.getElementById("inputnote").value)
+    document.getElementById("inputfreq").value = Math.round(value * 10) / 10 //Round to nearest tenth place
     osc.frequency.value = value
 }
 
