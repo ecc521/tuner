@@ -29,6 +29,6 @@ html, body {
 
 .maincontent {
   width:100%;
-  height:100%;
+  height:99%; /*Would do 100, but has a scrollbar*/
   border:0;
 }

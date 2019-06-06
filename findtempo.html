@@ -1,17 +1,28 @@
 <button id="tapTarget">Click Here With Each Beat</button>
 <p id="tempoOutput">Click to Start</p>
-
+<button id="reset">Reset</button>
 
 <style>
 #tapTarget {
   width:100%;
-  height:30vh;
+  height:42vh;
+  font-size:4vh;
 }
 
 #tempoOutput {
   text-align:center;
-  font-size:45px;
+  margin-top:4vh;
+  margin-bottom:4vh;
+  font-size:8vh;
 }
+
+#reset {
+  width:100%;
+  height:39vh; /*Didn't want to fight for the space to make 42vh work.*/
+  font-size:5vh;
+}
+
+html, body {margin:0;padding:0;}
 </style>
 
 <script>
@@ -22,7 +33,23 @@ let tempoOutput = document.getElementById("tempoOutput")
 
 let tapHistory = []
 
-setInterval(updateTempo, 1000)
+let resetButton = document.getElementById("reset")
+resetButton.addEventListener("click", function() {
+  tapHistory = []
+  updateTempo()
+})
+
+function noTap() {
+  let noTapTime = 1500 //If they haven't tapped within the last 1.5 seconds, update the tempo.
+  if (Date.now() - tapHistory[tapHistory.length - 1] > noTapTime) {
+    updateTempo()
+    setTimeout(noTap, 200) //Call it much faster.
+  }
+  else {
+    setTimeout(noTap, noTapTime)
+  }
+}
+noTap()
 
 function updateTempo() {
   let currentTime = Date.now()
@@ -35,7 +62,7 @@ function updateTempo() {
     let bpm = (tapHistory.length-1)/((currentTime-tapHistory[0])/1000/60)
     bpm = Math.round(bpm)
 
-    if (tapHistory.length === 0) {bpm = 0}
+    if (tapHistory.length === 0) {tempoOutput.innerHTML = "Click to Start"}
     else if (tapHistory.length === 1) {tempoOutput.innerHTML = "Click Again"}
     else {tempoOutput.innerHTML = bpm + " bpm"}
 }
