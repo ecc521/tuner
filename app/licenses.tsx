@@ -42,7 +42,7 @@ const LicenseItem = ({ item }) => {
 export default function LicensesScreen() {
   return (
     <SafeAreaView className="flex-1 bg-white dark:bg-slate-900" edges={['bottom']}>
-      <Stack.Screen options={{ title: 'Open Source Licenses', headerBackTitle: 'Settings' }} />
+      <Stack.Screen options={{ title: 'Third-Party Licenses', headerBackTitle: 'Settings' }} />
       <FlatList
         data={licenses}
         keyExtractor={(item) => `${item.name}@${item.version}`}

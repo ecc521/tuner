@@ -91,7 +91,7 @@ export default function SettingsScreen() {
                 <Link href="/licenses" asChild>
                     <TouchableOpacity>
                         <Text className="text-blue-500 dark:text-blue-400 text-sm underline">
-                            Open Source Licenses
+                            Third-Party Licenses
                         </Text>
                     </TouchableOpacity>
                 </Link>
