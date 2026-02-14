@@ -1,12 +1,13 @@
 {
-  "name": "temp-project",
+  "name": "tuner",
   "main": "expo-router/entry",
   "version": "1.0.0",
   "scripts": {
     "start": "expo start",
     "android": "expo start --android",
     "ios": "expo start --ios",
-    "web": "expo start --web"
+    "web": "expo start --web",
+    "postinstall": "node scripts/generate-licenses.js"
   },
   "dependencies": {
     "@expo/vector-icons": "^15.0.3",

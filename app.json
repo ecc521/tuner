@@ -1,11 +1,11 @@
 {
   "expo": {
-    "name": "temp-project",
-    "slug": "temp-project",
+    "name": "tuner",
+    "slug": "tuner",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "tempproject",
+    "scheme": "tuner",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "splash": {
