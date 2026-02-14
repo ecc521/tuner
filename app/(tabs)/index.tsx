@@ -15,7 +15,23 @@ export default function TunerScreen() {
   const sourceRef = useRef<MediaStreamAudioSourceNode | null>(null);
   const rafRef = useRef<number | null>(null);
 
+  // Initial permission check and cleanup
   useEffect(() => {
+    const checkPermissionsAndStart = async () => {
+        if (Platform.OS === 'web' && (navigator as any).permissions) {
+            try {
+                const result = await (navigator as any).permissions.query({ name: 'microphone' });
+                if (result.state === 'granted') {
+                    await startListening();
+                }
+            } catch (e) {
+                console.log("Permission check skipped or failed", e);
+            }
+        }
+    };
+
+    checkPermissionsAndStart();
+
     return () => {
       stopListening();
     };
@@ -43,6 +59,23 @@ export default function TunerScreen() {
       const source = ctx.createMediaStreamSource(stream);
       source.connect(analyser);
       sourceRef.current = source;
+
+      if (ctx.state === 'suspended') {
+        try {
+            await ctx.resume();
+        } catch (e) {
+            console.log("AudioContext resume failed", e);
+        }
+      }
+
+      if (ctx.state === 'suspended') {
+        // Still suspended, likely need user gesture.
+        // Clean up and return false (did not start)
+        source.disconnect();
+        ctx.close();
+        console.log("AudioContext suspended. User gesture required.");
+        return;
+      }
 
       setListening(true);
       setPermissionError(false);
@@ -169,7 +202,7 @@ export default function TunerScreen() {
             className={`px-8 py-4 rounded-full ${listening ? 'bg-red-500' : 'bg-blue-500'} shadow-lg active:opacity-80`}
         >
             <Text className="text-white text-xl font-bold">
-                {listening ? "Stop Tuner" : "Start Tuner"}
+                {listening ? "Pause Tuner" : "Start Tuner"}
             </Text>
         </TouchableOpacity>
 
