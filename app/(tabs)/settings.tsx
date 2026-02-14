@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, TouchableOpacity, ScrollView } from 'react-native';
 import { useSettings } from '../../context/SettingsContext';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { Link } from 'expo-router';
 
 export default function SettingsScreen() {
   const { tunepitch, setTunepitch, transpose, setTranspose, loading } = useSettings();
@@ -84,9 +85,16 @@ export default function SettingsScreen() {
             </View>
 
             <View className="mt-8 border-t border-gray-200 dark:border-gray-800 pt-8 items-center">
-                <Text className="text-gray-400 text-sm">
+                <Text className="text-gray-400 text-sm mb-2">
                     Tuner App v1.0.0
                 </Text>
+                <Link href="/licenses" asChild>
+                    <TouchableOpacity>
+                        <Text className="text-blue-500 dark:text-blue-400 text-sm underline">
+                            Open Source Licenses
+                        </Text>
+                    </TouchableOpacity>
+                </Link>
             </View>
 
         </View>
