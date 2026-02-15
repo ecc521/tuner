@@ -47,8 +47,7 @@ export default function ToneGeneratorScreen() {
     }
 
     try {
-        const AudioContextClass = window.AudioContext || (window as any).webkitAudioContext;
-        const ctx = new AudioContextClass();
+        const ctx = new AudioContext();
         audioContextRef.current = ctx;
 
         const osc = ctx.createOscillator();

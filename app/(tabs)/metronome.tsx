@@ -71,8 +71,7 @@ export default function MetronomeScreen() {
 
       if (timerIDRef.current || isPlaying) return;
 
-      const AudioContextClass = window.AudioContext || (window as any).webkitAudioContext;
-      const ctx = new AudioContextClass();
+      const ctx = new AudioContext();
       audioContextRef.current = ctx;
 
       nextNoteTimeRef.current = ctx.currentTime + 0.05;

@@ -51,8 +51,7 @@ export default function TunerScreen() {
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
 
-      const AudioContextClass = window.AudioContext || (window as any).webkitAudioContext;
-      const ctx = new AudioContextClass();
+      const ctx = new AudioContext();
       audioContextRef.current = ctx;
 
       const analyser = ctx.createAnalyser();
