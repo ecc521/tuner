@@ -1,10 +1,12 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Platform } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Platform, ScrollView } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function MetronomeScreen() {
   const [bpm, setBpm] = useState(120);
   const [bpmInput, setBpmInput] = useState(bpm.toString());
+  const [beatsPerMeasure, setBeatsPerMeasure] = useState(4);
+  const [beatsPerMeasureInput, setBeatsPerMeasureInput] = useState(beatsPerMeasure.toString());
   const [isPlaying, setIsPlaying] = useState(false);
   const [beat, setBeat] = useState(0); // 0-3 for 4/4 time
 
@@ -12,6 +14,7 @@ export default function MetronomeScreen() {
   const nextNoteTimeRef = useRef<number>(0);
   const timerIDRef = useRef<number | null>(null);
   const bpmRef = useRef(bpm);
+  const beatsPerMeasureRef = useRef(beatsPerMeasure);
   const beatRef = useRef(0); // To track beat number in audio thread
 
   useEffect(() => {
@@ -20,13 +23,18 @@ export default function MetronomeScreen() {
   }, [bpm]);
 
   useEffect(() => {
+    beatsPerMeasureRef.current = beatsPerMeasure;
+    setBeatsPerMeasureInput(beatsPerMeasure.toString());
+  }, [beatsPerMeasure]);
+
+  useEffect(() => {
     return () => stopMetronome();
   }, []);
 
   const nextNote = () => {
       const secondsPerBeat = 60.0 / bpmRef.current;
       nextNoteTimeRef.current += secondsPerBeat;
-      beatRef.current = (beatRef.current + 1) % 4;
+      beatRef.current = (beatRef.current + 1) % beatsPerMeasureRef.current;
   };
 
   const scheduleNote = (beatNumber: number, time: number) => {
@@ -36,7 +44,7 @@ export default function MetronomeScreen() {
       const osc = ctx.createOscillator();
       const envelope = ctx.createGain();
 
-      osc.frequency.value = (beatNumber === 0) ? 1000 : 800;
+      osc.frequency.value = (beatNumber === 0) ? 1500 : 1000;
       envelope.gain.value = 1;
       envelope.gain.exponentialRampToValueAtTime(0.001, time + 0.05);
 
@@ -44,7 +52,7 @@ export default function MetronomeScreen() {
       envelope.connect(ctx.destination);
 
       osc.start(time);
-      osc.stop(time + 0.1);
+      osc.stop(time + 0.05);
 
       // Schedule visual update
       const timeUntilNote = (time - ctx.currentTime) * 1000;
@@ -121,16 +129,38 @@ export default function MetronomeScreen() {
       setBpmInput(value.toString());
   };
 
-  return (
-    <SafeAreaView className="flex-1 bg-white dark:bg-slate-900 items-center justify-center">
-      <View className="items-center w-full max-w-sm">
+  const adjustBeats = (amount: number) => {
+      setBeatsPerMeasure(prev => Math.max(1, Math.min(99, prev + amount)));
+  };
 
-        {/* Visual Indicator */}
-        <View className="flex-row justify-center gap-4 mb-12">
-            {[0, 1, 2, 3].map((b) => (
+  const handleBeatsInputChange = (text: string) => {
+      setBeatsPerMeasureInput(text);
+  };
+
+  const handleBeatsInputSubmit = () => {
+      let value = parseInt(beatsPerMeasureInput, 10);
+
+      if (isNaN(value)) {
+          setBeatsPerMeasureInput(beatsPerMeasure.toString());
+          return;
+      }
+
+      value = Math.max(1, Math.min(99, value));
+      setBeatsPerMeasure(value);
+      setBeatsPerMeasureInput(value.toString());
+  };
+
+  return (
+    <SafeAreaView className="flex-1 bg-white dark:bg-slate-900">
+      <ScrollView contentContainerStyle={{ flexGrow: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <View className="items-center w-full max-w-sm py-8">
+
+          {/* Visual Indicator */}
+        <View className="flex-row justify-center gap-2 mb-8 flex-wrap">
+            {Array.from({ length: beatsPerMeasure }).map((_, b) => (
                 <View
                     key={b}
-                    className={`w-12 h-12 rounded-full ${
+                    className={`w-8 h-8 rounded-full m-1 ${
                         beat === b && isPlaying
                         ? (b === 0 ? 'bg-red-500' : 'bg-blue-500')
                         : 'bg-gray-200 dark:bg-gray-800'
@@ -160,6 +190,30 @@ export default function MetronomeScreen() {
             <TouchableOpacity onPress={() => adjustBpm(5)} className="bg-gray-200 p-4 rounded-full"><Text className="text-xl font-bold">+5</Text></TouchableOpacity>
         </View>
 
+        {/* Time Signature Controls */}
+        <View className="mb-8 items-center w-full">
+            <TextInput
+                className="text-6xl font-bold text-gray-800 dark:text-gray-100 mb-2 text-center w-full"
+                value={beatsPerMeasureInput}
+                onChangeText={handleBeatsInputChange}
+                onBlur={handleBeatsInputSubmit}
+                onSubmitEditing={handleBeatsInputSubmit}
+                keyboardType="numeric"
+                returnKeyType="done"
+                maxLength={2}
+            />
+            <Text className="text-xl text-gray-500 mb-4">Beats per Measure</Text>
+
+            <View className="flex-row gap-4">
+                <TouchableOpacity onPress={() => adjustBeats(-1)} className="bg-gray-200 p-4 rounded-full">
+                    <Text className="text-xl font-bold">-1</Text>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={() => adjustBeats(1)} className="bg-gray-200 p-4 rounded-full">
+                    <Text className="text-xl font-bold">+1</Text>
+                </TouchableOpacity>
+            </View>
+        </View>
+
         <TouchableOpacity
             onPress={toggleMetronome}
             className={`w-32 h-32 rounded-full items-center justify-center ${isPlaying ? 'bg-red-500' : 'bg-blue-500'} shadow-xl`}
@@ -169,7 +223,8 @@ export default function MetronomeScreen() {
             </Text>
         </TouchableOpacity>
 
-      </View>
+        </View>
+      </ScrollView>
     </SafeAreaView>
   );
 }
