@@ -7,10 +7,10 @@ Starting Metro Bundler
 Waiting on http://localhost:8081
 Logs for your project will appear below.
 Web node_modules/expo-router/entry.js ░░░░░░░░░░░░░░░░  0.0% (0/1)
-λ Bundled 3509ms node_modules/expo-router/node/render.js (1171 modules)
-Web node_modules/expo-router/entry.js ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓░ 95.3% (1137/1165)
-λ node_modules/expo-router/node/render.js ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓░ 99.9% (1171/1171)
-Web Bundled 5240ms node_modules/expo-router/entry.js (1217 modules)
-Web Bundled 1490ms node_modules/expo-router/entry.js (1207 modules)
-Web node_modules/expo-router/entry.js ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓░ 96.1% (1183/1207)
+Web node_modules/expo-router/entry.js ▓▓▓▓▓▓▓▓▓▓▓▓▓░░░ 85.6% ( 975/1064)
+λ node_modules/expo-router/node/render.js ▓▓▓▓▓▓▓▓▓▓▓▓▓░░░ 85.0% (899/975)
+λ Bundled 3881ms node_modules/expo-router/node/render.js (1161 modules)
+Web Bundled 6135ms node_modules/expo-router/entry.js (1217 modules)
+Web node_modules/expo-router/entry.js ▓▓▓▓▓▓▓░░░░░░░░░ 49.4% (475/676)
+Web Bundled 1578ms node_modules/expo-router/entry.js (1157 modules)
  LOG  [web] Logs will appear in the browser console

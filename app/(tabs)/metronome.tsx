@@ -101,7 +101,7 @@ export default function MetronomeScreen() {
   };
 
   const adjustBpm = (amount: number) => {
-      setBpm(prev => Math.max(1, Math.min(20000, prev + amount)));
+      setBpm(prev => Math.max(1, Math.min(999, prev + amount)));
   };
 
   const handleInputChange = (text: string) => {
@@ -116,7 +116,7 @@ export default function MetronomeScreen() {
           return;
       }
 
-      value = Math.max(1, Math.min(20000, value));
+      value = Math.max(1, Math.min(999, value));
       setBpm(value);
       setBpmInput(value.toString());
   };
@@ -148,7 +148,7 @@ export default function MetronomeScreen() {
             onSubmitEditing={handleInputSubmit}
             keyboardType="numeric"
             returnKeyType="done"
-            maxLength={5}
+            maxLength={3}
         />
         <Text className="text-xl text-gray-500 mb-8">BPM</Text>
 
