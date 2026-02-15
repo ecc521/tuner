@@ -191,26 +191,39 @@ export default function MetronomeScreen() {
         </View>
 
         {/* Time Signature Controls */}
-        <View className="mb-8 items-center w-full">
-            <TextInput
-                className="text-6xl font-bold text-gray-800 dark:text-gray-100 mb-2 text-center w-full"
-                value={beatsPerMeasureInput}
-                onChangeText={handleBeatsInputChange}
-                onBlur={handleBeatsInputSubmit}
-                onSubmitEditing={handleBeatsInputSubmit}
-                keyboardType="numeric"
-                returnKeyType="done"
-                maxLength={2}
-            />
-            <Text className="text-xl text-gray-500 mb-4">Beats per Measure</Text>
+        <View className="mb-8 w-full px-8">
+            <View className="flex-row items-center justify-between bg-gray-50 dark:bg-gray-800 rounded-xl p-4 shadow-sm">
+                <Text className="text-lg font-semibold text-gray-700 dark:text-gray-300">
+                    Beats per Measure
+                </Text>
 
-            <View className="flex-row gap-4">
-                <TouchableOpacity onPress={() => adjustBeats(-1)} className="bg-gray-200 p-4 rounded-full">
-                    <Text className="text-xl font-bold">-1</Text>
-                </TouchableOpacity>
-                <TouchableOpacity onPress={() => adjustBeats(1)} className="bg-gray-200 p-4 rounded-full">
-                    <Text className="text-xl font-bold">+1</Text>
-                </TouchableOpacity>
+                <View className="flex-row items-center gap-3">
+                    <TouchableOpacity
+                        onPress={() => adjustBeats(-1)}
+                        className="w-10 h-10 bg-gray-200 dark:bg-gray-600 rounded-lg items-center justify-center active:opacity-70"
+                    >
+                        <Text className="text-xl font-bold text-gray-700 dark:text-gray-200">-</Text>
+                    </TouchableOpacity>
+
+                    <TextInput
+                        className="text-2xl font-bold text-center w-12 text-blue-600 dark:text-blue-400 p-0"
+                        value={beatsPerMeasureInput}
+                        onChangeText={handleBeatsInputChange}
+                        onBlur={handleBeatsInputSubmit}
+                        onSubmitEditing={handleBeatsInputSubmit}
+                        keyboardType="numeric"
+                        returnKeyType="done"
+                        maxLength={2}
+                        selectTextOnFocus
+                    />
+
+                    <TouchableOpacity
+                        onPress={() => adjustBeats(1)}
+                        className="w-10 h-10 bg-gray-200 dark:bg-gray-600 rounded-lg items-center justify-center active:opacity-70"
+                    >
+                        <Text className="text-xl font-bold text-gray-700 dark:text-gray-200">+</Text>
+                    </TouchableOpacity>
+                </View>
             </View>
         </View>
 
