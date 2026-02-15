@@ -143,12 +143,12 @@ export default function ToneGeneratorScreen() {
             </View>
 
             <Text className="text-gray-500 mb-2 text-center">Select Octave</Text>
-            <ScrollView horizontal showsHorizontalScrollIndicator={false} className="flex-row gap-2 max-h-14">
+            <ScrollView horizontal showsHorizontalScrollIndicator={false} className="flex-row gap-2 max-h-14" contentContainerStyle={{ flexGrow: 1, justifyContent: 'center', gap: 8 }}>
                 {[0, 1, 2, 3, 4, 5, 6, 7, 8].map((oct) => (
                     <TouchableOpacity
                         key={oct}
                         onPress={() => setSelectedOctave(oct)}
-                        className={`w-10 h-10 rounded-full items-center justify-center mr-2 ${selectedOctave === oct ? 'bg-blue-500' : 'bg-gray-200 dark:bg-gray-800'}`}
+                        className={`w-10 h-10 rounded-full items-center justify-center ${selectedOctave === oct ? 'bg-blue-500' : 'bg-gray-200 dark:bg-gray-800'}`}
                     >
                         <Text className={`${selectedOctave === oct ? 'text-white' : 'text-gray-800 dark:text-gray-200'} font-bold`}>
                             {oct}
