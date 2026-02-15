@@ -5,10 +5,10 @@ import { SettingsProvider } from '../context/SettingsContext';
 import { useFonts } from 'expo-font';
 import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import 'react-native-reanimated';
-
-import { useColorScheme } from '@/components/useColorScheme';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useColorScheme } from 'nativewind';
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -28,6 +28,8 @@ export default function RootLayout() {
     SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
     ...FontAwesome.font,
   });
+  const { colorScheme, setColorScheme } = useColorScheme();
+  const [isColorSchemeLoaded, setIsColorSchemeLoaded] = useState(false);
 
   // Expo Router uses Error Boundaries to catch errors in the navigation tree.
   useEffect(() => {
@@ -35,20 +37,29 @@ export default function RootLayout() {
   }, [error]);
 
   useEffect(() => {
-    if (loaded) {
+    (async () => {
+      try {
+        const theme = await AsyncStorage.getItem('theme');
+        if (theme) {
+          setColorScheme(theme as 'light' | 'dark' | 'system');
+        }
+      } catch (e) {
+        console.error('Failed to load theme preference', e);
+      } finally {
+        setIsColorSchemeLoaded(true);
+      }
+    })();
+  }, []);
+
+  useEffect(() => {
+    if (loaded && isColorSchemeLoaded) {
       SplashScreen.hideAsync();
     }
-  }, [loaded]);
+  }, [loaded, isColorSchemeLoaded]);
 
-  if (!loaded) {
+  if (!loaded || !isColorSchemeLoaded) {
     return null;
   }
-
-  return <RootLayoutNav />;
-}
-
-function RootLayoutNav() {
-  const colorScheme = useColorScheme();
 
   return (
     <SettingsProvider>
