@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { View, Text, TextInput, TouchableOpacity, ScrollView } from 'react-native';
 import { useSettings } from '../../context/SettingsContext';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -29,16 +29,21 @@ export default function SettingsScreen() {
       setLocalTunepitch(String(tunepitch));
   }, [tunepitch]);
 
-  // Debounce tunepitch update to context to avoid excessive re-renders and AsyncStorage writes
+  // Keep a ref to the latest local value for the unmount cleanup
+  const localTunepitchRef = useRef(localTunepitch);
   useEffect(() => {
-      const val = parseFloat(localTunepitch);
-      if (!isNaN(val) && val > 0 && val !== tunepitch) {
-          const handler = setTimeout(() => {
+      localTunepitchRef.current = localTunepitch;
+  }, [localTunepitch]);
+
+  // Update context when the component unmounts (e.g. navigating away)
+  useEffect(() => {
+      return () => {
+          const val = parseFloat(localTunepitchRef.current);
+          if (!isNaN(val) && val > 0) {
               setTunepitch(val);
-          }, 500);
-          return () => clearTimeout(handler);
-      }
-  }, [localTunepitch, tunepitch, setTunepitch]);
+          }
+      };
+  }, [setTunepitch]);
 
   const handleTunepitchChange = (text: string) => {
       setLocalTunepitch(text);
