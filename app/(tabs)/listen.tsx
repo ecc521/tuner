@@ -47,7 +47,7 @@ export default function ToneGeneratorScreen() {
     }
 
     try {
-        const AudioContextClass = window.AudioContext || (window as any).webkitAudioContext;
+        const AudioContextClass = window.AudioContext || window.webkitAudioContext;
         const ctx = new AudioContextClass();
         audioContextRef.current = ctx;
 
