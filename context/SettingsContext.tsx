@@ -42,11 +42,13 @@ export const SettingsProvider: React.FC<{children: React.ReactNode}> = ({ childr
   }, []);
 
   const setTunepitch = async (value: number) => {
+    if (value === tunepitch) return;
     setTunepitchState(value);
     await AsyncStorage.setItem('tunepitch', String(value));
   };
 
   const setTranspose = async (value: number) => {
+    if (value === transpose) return;
     setTransposeState(value);
     await AsyncStorage.setItem('transpose', String(value));
   };

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { View, Text, TextInput, TouchableOpacity, ScrollView } from 'react-native';
 import { useSettings } from '../../context/SettingsContext';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -29,10 +29,29 @@ export default function SettingsScreen() {
       setLocalTunepitch(String(tunepitch));
   }, [tunepitch]);
 
+  // Keep a ref to the latest local value for the unmount cleanup
+  const localTunepitchRef = useRef(localTunepitch);
+  useEffect(() => {
+      localTunepitchRef.current = localTunepitch;
+  }, [localTunepitch]);
+
+  // Update context when the component unmounts (e.g. navigating away)
+  useEffect(() => {
+      return () => {
+          const val = parseFloat(localTunepitchRef.current);
+          if (!isNaN(val) && val > 0) {
+              setTunepitch(val);
+          }
+      };
+  }, [setTunepitch]);
+
   const handleTunepitchChange = (text: string) => {
       setLocalTunepitch(text);
-      const val = parseFloat(text);
-      if (!isNaN(val) && val > 0) {
+  };
+
+  const handleBlur = () => {
+      const val = parseFloat(localTunepitch);
+      if (!isNaN(val) && val > 0 && val !== tunepitch) {
           setTunepitch(val);
       }
   };
@@ -93,6 +112,7 @@ export default function SettingsScreen() {
                         className="flex-1 text-xl text-gray-800 dark:text-gray-100"
                         value={localTunepitch}
                         onChangeText={handleTunepitchChange}
+                        onBlur={handleBlur}
                         keyboardType="numeric"
                         placeholder="440"
                         placeholderTextColor="#9ca3af"
