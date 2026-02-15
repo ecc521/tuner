@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Platform } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { createAudioContext } from '../../utils/audio';
 
 export default function MetronomeScreen() {
   const [bpm, setBpm] = useState(120);
@@ -70,7 +69,7 @@ export default function MetronomeScreen() {
 
       if (timerIDRef.current || isPlaying) return;
 
-      const ctx = createAudioContext();
+      const ctx = new AudioContext();
       audioContextRef.current = ctx;
 
       nextNoteTimeRef.current = ctx.currentTime + 0.05;
