@@ -4,6 +4,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function MetronomeScreen() {
   const [bpm, setBpm] = useState(120);
+  const [bpmInput, setBpmInput] = useState(bpm.toString());
   const [isPlaying, setIsPlaying] = useState(false);
   const [beat, setBeat] = useState(0); // 0-3 for 4/4 time
 
@@ -15,6 +16,7 @@ export default function MetronomeScreen() {
 
   useEffect(() => {
     bpmRef.current = bpm;
+    setBpmInput(bpm.toString());
   }, [bpm]);
 
   useEffect(() => {
@@ -102,6 +104,23 @@ export default function MetronomeScreen() {
       setBpm(prev => Math.max(30, Math.min(300, prev + amount)));
   };
 
+  const handleInputChange = (text: string) => {
+      setBpmInput(text);
+  };
+
+  const handleInputSubmit = () => {
+      let value = parseInt(bpmInput, 10);
+
+      if (isNaN(value)) {
+          setBpmInput(bpm.toString());
+          return;
+      }
+
+      value = Math.max(30, Math.min(300, value));
+      setBpm(value);
+      setBpmInput(value.toString());
+  };
+
   return (
     <SafeAreaView className="flex-1 bg-white dark:bg-slate-900 items-center justify-center">
       <View className="items-center w-full max-w-sm">
@@ -121,9 +140,16 @@ export default function MetronomeScreen() {
         </View>
 
         {/* BPM Display */}
-        <Text className="text-8xl font-bold text-gray-800 dark:text-gray-100 mb-4">
-            {bpm}
-        </Text>
+        <TextInput
+            className="text-8xl font-bold text-gray-800 dark:text-gray-100 mb-4 text-center w-full"
+            value={bpmInput}
+            onChangeText={handleInputChange}
+            onBlur={handleInputSubmit}
+            onSubmitEditing={handleInputSubmit}
+            keyboardType="numeric"
+            returnKeyType="done"
+            maxLength={3}
+        />
         <Text className="text-xl text-gray-500 mb-8">BPM</Text>
 
         {/* Controls */}
