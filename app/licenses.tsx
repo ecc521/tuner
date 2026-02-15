@@ -3,6 +3,7 @@ import { View, Text, FlatList, TouchableOpacity, Linking, StyleSheet } from 'rea
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Stack } from 'expo-router';
 import licenses from '../assets/licenses.json';
+import { isValidExternalLink } from '../utils/url';
 
 const LicenseItem = ({ item }) => {
   const [expanded, setExpanded] = React.useState(false);
@@ -23,9 +24,9 @@ const LicenseItem = ({ item }) => {
 
       {expanded && (
         <View className="mt-4">
-          {item.homepage && (
+          {item.homepage && isValidExternalLink(item.homepage) && (
              <TouchableOpacity onPress={() => Linking.openURL(item.homepage)}>
-                <Text className="text-blue-600 dark:text-blue-400 mb-2 underline">Homepage</Text>
+                <Text className="text-blue-600 dark:text-blue-400 mb-2 underline">View Project Page</Text>
              </TouchableOpacity>
           )}
           <View className="bg-gray-50 dark:bg-gray-800 p-3 rounded-md">
