@@ -2,10 +2,17 @@ import { Link } from 'expo-router';
 import * as WebBrowser from 'expo-web-browser';
 import React from 'react';
 import { Platform } from 'react-native';
+import { isValidExternalLink } from '../utils/url';
 
 export function ExternalLink(
   props: Omit<React.ComponentProps<typeof Link>, 'href'> & { href: string }
 ) {
+  const isValid = isValidExternalLink(props.href);
+
+  if (!isValid) {
+    return null;
+  }
+
   return (
     <Link
       target="_blank"
