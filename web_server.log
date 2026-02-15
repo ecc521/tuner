@@ -1,0 +1,16 @@
+
+> tuner@1.0.0 web
+> expo start --web
+
+Starting project at /app
+Starting Metro Bundler
+Waiting on http://localhost:8081
+Logs for your project will appear below.
+Web node_modules/expo-router/entry.js ░░░░░░░░░░░░░░░░  0.0% (0/1)
+λ Bundled 3509ms node_modules/expo-router/node/render.js (1171 modules)
+Web node_modules/expo-router/entry.js ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓░ 95.3% (1137/1165)
+λ node_modules/expo-router/node/render.js ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓░ 99.9% (1171/1171)
+Web Bundled 5240ms node_modules/expo-router/entry.js (1217 modules)
+Web Bundled 1490ms node_modules/expo-router/entry.js (1207 modules)
+Web node_modules/expo-router/entry.js ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓░ 96.1% (1183/1207)
+ LOG  [web] Logs will appear in the browser console
