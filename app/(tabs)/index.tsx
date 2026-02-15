@@ -18,9 +18,9 @@ export default function TunerScreen() {
   // Initial permission check and cleanup
   useEffect(() => {
     const checkPermissionsAndStart = async () => {
-        if (Platform.OS === 'web' && (navigator as any).permissions) {
+        if (Platform.OS === 'web' && navigator.permissions) {
             try {
-                const result = await (navigator as any).permissions.query({ name: 'microphone' });
+                const result = await navigator.permissions.query({ name: 'microphone' });
                 if (result.state === 'granted') {
                     await startListening();
                 }
@@ -46,7 +46,7 @@ export default function TunerScreen() {
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
 
-      const AudioContextClass = window.AudioContext || (window as any).webkitAudioContext;
+      const AudioContextClass = window.AudioContext || window.webkitAudioContext;
       const ctx = new AudioContextClass();
       audioContextRef.current = ctx;
 
