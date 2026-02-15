@@ -3,10 +3,27 @@ import { View, Text, TextInput, TouchableOpacity, ScrollView } from 'react-nativ
 import { useSettings } from '../../context/SettingsContext';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Link } from 'expo-router';
+import { useColorScheme } from 'nativewind';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function SettingsScreen() {
   const { tunepitch, setTunepitch, transpose, setTranspose, loading } = useSettings();
   const [localTunepitch, setLocalTunepitch] = useState(String(tunepitch));
+  const { setColorScheme } = useColorScheme();
+  const [themePreference, setThemePreference] = useState<'light' | 'dark' | 'system'>('system');
+
+  useEffect(() => {
+    (async () => {
+       try {
+         const saved = await AsyncStorage.getItem('theme');
+         if (saved) {
+             setThemePreference(saved as any);
+         }
+       } catch (e) {
+           console.log("Failed to load theme preference");
+       }
+    })();
+  }, []);
 
   useEffect(() => {
       setLocalTunepitch(String(tunepitch));
@@ -20,10 +37,16 @@ export default function SettingsScreen() {
       }
   };
 
+  const handleThemeChange = async (newTheme: 'light' | 'dark' | 'system') => {
+      setThemePreference(newTheme);
+      setColorScheme(newTheme);
+      await AsyncStorage.setItem('theme', newTheme);
+  };
+
   if (loading) {
       return (
         <SafeAreaView className="flex-1 bg-white dark:bg-slate-900 items-center justify-center">
-            <Text>Loading settings...</Text>
+            <Text className="text-gray-800 dark:text-gray-100">Loading settings...</Text>
         </SafeAreaView>
       );
   }
@@ -33,6 +56,33 @@ export default function SettingsScreen() {
       <ScrollView contentContainerStyle={{ paddingBottom: 40 }}>
         <View className="max-w-md w-full mx-auto">
             <Text className="text-3xl font-bold text-gray-800 dark:text-gray-100 mb-8 mt-4">Settings</Text>
+
+            <View className="mb-8 p-4 bg-gray-50 dark:bg-gray-800 rounded-xl shadow-sm">
+                <Text className="text-lg font-semibold text-gray-700 dark:text-gray-300 mb-4">
+                    Appearance
+                </Text>
+                <View className="flex-row bg-gray-200 dark:bg-gray-700 rounded-lg p-1">
+                    {['system', 'light', 'dark'].map((theme) => (
+                        <TouchableOpacity
+                            key={theme}
+                            onPress={() => handleThemeChange(theme as 'light' | 'dark' | 'system')}
+                            className={`flex-1 py-2 rounded-md items-center justify-center ${
+                                themePreference === theme
+                                ? 'bg-white dark:bg-gray-600 shadow-sm'
+                                : ''
+                            }`}
+                        >
+                            <Text className={`capitalize font-medium ${
+                                themePreference === theme
+                                ? 'text-blue-600 dark:text-blue-400'
+                                : 'text-gray-500 dark:text-gray-400'
+                            }`}>
+                                {theme}
+                            </Text>
+                        </TouchableOpacity>
+                    ))}
+                </View>
+            </View>
 
             <View className="mb-8 p-4 bg-gray-50 dark:bg-gray-800 rounded-xl shadow-sm">
                 <Text className="text-lg font-semibold text-gray-700 dark:text-gray-300 mb-2">
