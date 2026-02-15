@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { View, Text, Platform, TouchableOpacity, ScrollView } from 'react-native';
 import { useSettings } from '../../context/SettingsContext';
 import { getScale, getNoteFromFreq, Note } from '../../utils/noteUtils';
+import { createAudioContext } from '../../utils/audio';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function TunerScreen() {
@@ -46,8 +47,7 @@ export default function TunerScreen() {
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
 
-      const AudioContextClass = window.AudioContext || (window as any).webkitAudioContext;
-      const ctx = new AudioContextClass();
+      const ctx = createAudioContext();
       audioContextRef.current = ctx;
 
       const analyser = ctx.createAnalyser();

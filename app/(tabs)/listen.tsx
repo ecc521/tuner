@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { View, Text, TextInput, TouchableOpacity, ScrollView, Platform, StyleSheet } from 'react-native';
 import { useSettings } from '../../context/SettingsContext';
 import { getScale, getNoteFromName, Note, ScaleNote } from '../../utils/noteUtils';
+import { createAudioContext } from '../../utils/audio';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function ToneGeneratorScreen() {
@@ -47,8 +48,7 @@ export default function ToneGeneratorScreen() {
     }
 
     try {
-        const AudioContextClass = window.AudioContext || (window as any).webkitAudioContext;
-        const ctx = new AudioContextClass();
+        const ctx = createAudioContext();
         audioContextRef.current = ctx;
 
         const osc = ctx.createOscillator();
