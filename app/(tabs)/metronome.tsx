@@ -190,6 +190,18 @@ export default function MetronomeScreen() {
             <TouchableOpacity onPress={() => adjustBpm(5)} className="bg-gray-200 p-4 rounded-full"><Text className="text-xl font-bold">+5</Text></TouchableOpacity>
         </View>
 
+        {/* Start/Stop Button */}
+        <View className="w-full px-8 mb-8">
+            <TouchableOpacity
+                onPress={toggleMetronome}
+                className={`w-full py-6 rounded-xl items-center justify-center ${isPlaying ? 'bg-red-500' : 'bg-blue-500'} shadow-xl`}
+            >
+                <Text className="text-white text-3xl font-bold">
+                    {isPlaying ? "STOP" : "START"}
+                </Text>
+            </TouchableOpacity>
+        </View>
+
         {/* Time Signature Controls */}
         <View className="mb-8 w-full px-8">
             <View className="flex-row items-center justify-between bg-gray-50 dark:bg-gray-800 rounded-xl p-4 shadow-sm">
@@ -226,15 +238,6 @@ export default function MetronomeScreen() {
                 </View>
             </View>
         </View>
-
-        <TouchableOpacity
-            onPress={toggleMetronome}
-            className={`w-32 h-32 rounded-full items-center justify-center ${isPlaying ? 'bg-red-500' : 'bg-blue-500'} shadow-xl`}
-        >
-            <Text className="text-white text-3xl font-bold">
-                {isPlaying ? "STOP" : "START"}
-            </Text>
-        </TouchableOpacity>
 
         </View>
       </ScrollView>
