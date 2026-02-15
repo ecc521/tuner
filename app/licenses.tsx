@@ -25,11 +25,7 @@ const LicenseItem = ({ item }) => {
       {expanded && (
         <View className="mt-4">
           {item.homepage && isValidExternalLink(item.homepage) && (
-             <TouchableOpacity onPress={() => {
-                if (isValidExternalLink(item.homepage)) {
-                  Linking.openURL(item.homepage);
-                }
-             }}>
+             <TouchableOpacity onPress={() => Linking.openURL(item.homepage)}>
                 <Text className="text-blue-600 dark:text-blue-400 mb-2 underline">View Project Page</Text>
              </TouchableOpacity>
           )}
