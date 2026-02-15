@@ -29,10 +29,24 @@ export default function SettingsScreen() {
       setLocalTunepitch(String(tunepitch));
   }, [tunepitch]);
 
+  // Debounce tunepitch update to context to avoid excessive re-renders and AsyncStorage writes
+  useEffect(() => {
+      const val = parseFloat(localTunepitch);
+      if (!isNaN(val) && val > 0 && val !== tunepitch) {
+          const handler = setTimeout(() => {
+              setTunepitch(val);
+          }, 500);
+          return () => clearTimeout(handler);
+      }
+  }, [localTunepitch, tunepitch, setTunepitch]);
+
   const handleTunepitchChange = (text: string) => {
       setLocalTunepitch(text);
-      const val = parseFloat(text);
-      if (!isNaN(val) && val > 0) {
+  };
+
+  const handleBlur = () => {
+      const val = parseFloat(localTunepitch);
+      if (!isNaN(val) && val > 0 && val !== tunepitch) {
           setTunepitch(val);
       }
   };
@@ -93,6 +107,7 @@ export default function SettingsScreen() {
                         className="flex-1 text-xl text-gray-800 dark:text-gray-100"
                         value={localTunepitch}
                         onChangeText={handleTunepitchChange}
+                        onBlur={handleBlur}
                         keyboardType="numeric"
                         placeholder="440"
                         placeholderTextColor="#9ca3af"
