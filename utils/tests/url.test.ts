@@ -33,6 +33,11 @@ describe('isValidExternalLink', () => {
     expect(isValidExternalLink('ftp://files.com')).toBe(false);
   });
 
+  it('should return false for incomplete protocols', () => {
+    expect(isValidExternalLink('http://')).toBe(false);
+    expect(isValidExternalLink('https://')).toBe(false);
+  });
+
   it('should return false for non-string inputs', () => {
     expect(isValidExternalLink(null)).toBe(false);
     expect(isValidExternalLink(undefined)).toBe(false);
@@ -48,5 +53,11 @@ describe('isValidExternalLink', () => {
   it('should return false for URLs missing a protocol', () => {
     expect(isValidExternalLink('google.com')).toBe(false);
     expect(isValidExternalLink('www.google.com')).toBe(false);
+  });
+
+  it('should handle authority normalization', () => {
+    // These should be valid and normalized by URL constructor
+    expect(isValidExternalLink('http:google.com')).toBe(true);
+    expect(isValidExternalLink('https://example.com\\attacker.com')).toBe(true);
   });
 });

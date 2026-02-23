@@ -9,6 +9,11 @@ export const isValidExternalLink = (url: any): boolean => {
   if (typeof url !== 'string') {
     return false;
   }
-  const normalizedUrl = url.trim().toLowerCase();
-  return normalizedUrl.startsWith('http://') || normalizedUrl.startsWith('https://');
+
+  try {
+    const parsedUrl = new URL(url);
+    return parsedUrl.protocol === 'http:' || parsedUrl.protocol === 'https:';
+  } catch {
+    return false;
+  }
 };
