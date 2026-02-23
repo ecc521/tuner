@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Platform, ScrollView } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
@@ -149,6 +149,8 @@ export default function MetronomeScreen() {
       setBeatsPerMeasureInput(value.toString());
   };
 
+  const beatsArray = useMemo(() => Array.from({ length: beatsPerMeasure }), [beatsPerMeasure]);
+
   return (
     <SafeAreaView className="flex-1 bg-white dark:bg-slate-900">
       <ScrollView contentContainerStyle={{ flexGrow: 1, justifyContent: 'center', alignItems: 'center' }}>
@@ -156,7 +158,7 @@ export default function MetronomeScreen() {
 
           {/* Visual Indicator */}
         <View className="flex-row justify-center gap-2 mb-8 flex-wrap">
-            {Array.from({ length: beatsPerMeasure }).map((_, b) => (
+            {beatsArray.map((_, b) => (
                 <View
                     key={b}
                     className={`w-8 h-8 rounded-full m-1 ${
