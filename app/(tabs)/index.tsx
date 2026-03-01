@@ -15,9 +15,11 @@ export default function TunerScreen() {
   const sourceRef = useRef<MediaStreamAudioSourceNode | null>(null);
   const rafRef = useRef<number | null>(null);
   const settingsRef = useRef({ tunepitch, transpose });
+  const scaleRef = useRef(getScale(tunepitch, transpose));
 
   useEffect(() => {
     settingsRef.current = { tunepitch, transpose };
+    scaleRef.current = getScale(tunepitch, transpose);
   }, [tunepitch, transpose]);
 
   // Initial permission check and cleanup
@@ -125,8 +127,7 @@ export default function TunerScreen() {
         const freq = maxIndex * (audioContextRef.current.sampleRate / analyserRef.current.fftSize);
 
         // Use noteUtils
-        const { tunepitch, transpose } = settingsRef.current;
-        const scale = getScale(tunepitch, transpose);
+        const scale = scaleRef.current;
         const detectedNote = getNoteFromFreq(freq, scale);
 
         if (detectedNote) {
