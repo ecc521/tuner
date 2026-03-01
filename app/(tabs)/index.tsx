@@ -86,7 +86,6 @@ export default function TunerScreen() {
 
       updatePitch();
     } catch (err) {
-      console.error(err);
       setPermissionError(true);
     }
   };
