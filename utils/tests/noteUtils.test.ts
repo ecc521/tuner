@@ -143,4 +143,122 @@ describe("getScale", () => {
     // i = 0, freq = 440 * (2 ** ((0 - 21) / 12)) = 440 * (2 ** -1.75) ≈ 130.81
     expect(cNote?.freq).toBeCloseTo(440 * Math.pow(2, -1.75), 2);
   });
+
+  it("should return exactly 12 scale notes", () => {
+    const scale = getScale(440, 0);
+    expect(scale.length).toBe(12);
+  });
+
+  it("should compute accurate minfreq, maxfreq, and logs for A4", () => {
+    const scale = getScale(440, 0);
+    const aNote = scale.find(n => n.name === "A");
+    expect(aNote).toBeDefined();
+
+    if (aNote) {
+      expect(aNote.freq).toBe(440);
+      expect(aNote.rawlog).toBeCloseTo(Math.log2(440), 10);
+      expect(aNote.log).toBeCloseTo(Math.log2(440) % 1, 10);
+
+      // minfreq = 440 * 2^(-0.5/12)
+      const expectedMinFreq = 440 * Math.pow(2, -0.5 / 12);
+      expect(aNote.minfreq).toBeCloseTo(expectedMinFreq, 5);
+      expect(aNote.rawminlog).toBeCloseTo(Math.log2(expectedMinFreq), 10);
+      expect(aNote.minlog).toBeCloseTo(Math.log2(expectedMinFreq) % 1, 10);
+
+      // maxfreq = 440 * 2^(0.5/12)
+      const expectedMaxFreq = 440 * Math.pow(2, 0.5 / 12);
+      expect(aNote.maxfreq).toBeCloseTo(expectedMaxFreq, 5);
+      expect(aNote.rawmaxlog).toBeCloseTo(Math.log2(expectedMaxFreq), 10);
+      expect(aNote.maxlog).toBeCloseTo(Math.log2(expectedMaxFreq) % 1, 10);
+      
+      expect(aNote.octave).toBe(4);
+    }
+  });
+
+  it("should handle standard boundary matching logic (A4)", () => {
+    const scale = getScale(440, 0);
+    const aNote = scale.find(n => n.name === "A");
+    expect(aNote).toBeDefined();
+
+    if (aNote) {
+      // Perfect match
+      expect(aNote.matches(440)).toBe(true);
+
+      // Just inside boundaries
+      expect(aNote.matches(aNote.minfreq * 1.001)).toBe(true);
+      expect(aNote.matches(aNote.maxfreq * 0.999)).toBe(true);
+
+      // Just outside boundaries
+      expect(aNote.matches(aNote.minfreq * 0.999)).toBe(false);
+      expect(aNote.matches(aNote.maxfreq * 1.001)).toBe(false);
+
+      // Far outside boundaries
+      expect(aNote.matches(300)).toBe(false);
+      expect(aNote.matches(500)).toBe(false);
+      
+      // Other octaves should also match
+      expect(aNote.matches(220)).toBe(true);
+      expect(aNote.matches(880)).toBe(true);
+    }
+  });
+
+  it("should handle wrap-around boundary matching logic (C4)", () => {
+    const scale = getScale(440, 0);
+    const cNote = scale.find(n => n.name === "C");
+    expect(cNote).toBeDefined();
+    
+    // C4 has a log very close to 0 (or 1), so its minlog is > maxlog, causing a wrap-around
+    if (cNote) {
+      expect(cNote.minlog).toBeGreaterThan(cNote.maxlog);
+
+      // Perfect match
+      expect(cNote.matches(cNote.freq)).toBe(true);
+
+      // Just inside boundaries
+      expect(cNote.matches(cNote.minfreq * 1.001)).toBe(true);
+      expect(cNote.matches(cNote.maxfreq * 0.999)).toBe(true);
+
+      // Just outside boundaries
+      expect(cNote.matches(cNote.minfreq * 0.999)).toBe(false);
+      expect(cNote.matches(cNote.maxfreq * 1.001)).toBe(false);
+      
+      // Other octaves should also match
+      expect(cNote.matches(cNote.freq / 2)).toBe(true);
+      expect(cNote.matches(cNote.freq * 2)).toBe(true);
+      
+      // Test the branches in the wrap-around logic explicitly
+      // A log just above 0.5 (near minlog)
+      const l1 = cNote.minlog + 0.001;
+      const f1 = Math.pow(2, Math.floor(cNote.rawminlog) + l1);
+      expect(cNote.matches(f1)).toBe(true);
+      
+      // A log just below 0.5 (near maxlog)
+      const l2 = cNote.maxlog - 0.001;
+      const f2 = Math.pow(2, Math.floor(cNote.rawmaxlog) + l2);
+      expect(cNote.matches(f2)).toBe(true);
+    }
+  });
+  
+  it("should test all altnames", () => {
+    const scale = getScale(440, 0);
+    
+    const dFlat = scale.find(n => n.altname === "D♭");
+    expect(dFlat?.name).toBe("C♯");
+    
+    const eFlat = scale.find(n => n.name === "E♭");
+    expect(eFlat?.altname).toBe("D♯");
+    
+    const gFlat = scale.find(n => n.altname === "G♭");
+    expect(gFlat?.name).toBe("F♯");
+    
+    const aFlat = scale.find(n => n.name === "A♭");
+    expect(aFlat?.altname).toBe("G♯");
+    
+    const bFlat = scale.find(n => n.name === "B♭");
+    expect(bFlat?.altname).toBe("A♯");
+    
+    // Non-accidental notes should have altname same as name
+    const aNote = scale.find(n => n.name === "A");
+    expect(aNote?.altname).toBe("A");
+  });
 });

@@ -57,7 +57,7 @@ export const getScale = (tunepitch: number, transpose: number): ScaleNote[] => {
     const minlog = rawminlog % 1;
     const maxlog = rawmaxlog % 1;
 
-    const matches = function(f: number) {
+    const matches = function(f: number): boolean {
         const l = Math.log2(f) % 1;
         // Handle negative logs if needed, though frequencies should be audible > 20Hz -> log > 4.
         // But just in case:
@@ -97,7 +97,7 @@ export const getScale = (tunepitch: number, transpose: number): ScaleNote[] => {
 export const getNoteFromFreq = (freq: number, scale: ScaleNote[]): Note | undefined => {
   for (let i = 0; i < scale.length; i++) {
     if (scale[i].matches(freq)) {
-      const baseNote = scale[i];
+      const { matches, ...baseNote } = scale[i];
 
       const rawlog = Math.log2(freq);
       const octave = baseNote.octave - Math.round(baseNote.rawlog - rawlog);
@@ -119,23 +119,24 @@ export const getNoteFromFreq = (freq: number, scale: ScaleNote[]): Note | undefi
         rawlog,
         octave,
         cents
-      } as Note;
+      };
     }
   }
   return undefined;
 };
 
 export const getNoteFromName = (name: string, octave: number, scale: ScaleNote[]): Note | undefined => {
-    let baseNote: ScaleNote | undefined;
+    let scaleNote: ScaleNote | undefined;
     for (let i=0;i<scale.length;i++) {
         if (scale[i].name === name || scale[i].altname === name) {
-            baseNote = scale[i];
+            scaleNote = scale[i];
             break;
         }
     }
 
-    if (!baseNote) return undefined;
+    if (!scaleNote) return undefined;
 
+    const { matches, ...baseNote } = scaleNote;
     const diff = octave - baseNote.octave;
     const factor = 2**diff;
 
@@ -149,5 +150,5 @@ export const getNoteFromName = (name: string, octave: number, scale: ScaleNote[]
         rawmaxlog: baseNote.rawmaxlog + diff,
         octave: octave,
         cents: 0
-    } as Note;
+    };
 }
