@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useMemo, useCallback } from 'react';
 import { View, Text, TextInput, TouchableOpacity, ScrollView, Platform, StyleSheet } from 'react-native';
 import { useSettings } from '../../context/SettingsContext';
 import { getScale, getNoteFromName, Note, ScaleNote } from '../../utils/noteUtils';
@@ -6,7 +6,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function ToneGeneratorScreen() {
   const { tunepitch, transpose } = useSettings();
-  const scale = getScale(tunepitch, transpose);
+  const scale = useMemo(() => getScale(tunepitch, transpose), [tunepitch, transpose]);
 
   const [frequency, setFrequency] = useState<number>(440);
   const [selectedNoteName, setSelectedNoteName] = useState<string>("A");
@@ -17,12 +17,37 @@ export default function ToneGeneratorScreen() {
   const oscillatorRef = useRef<OscillatorNode | null>(null);
   const gainNodeRef = useRef<GainNode | null>(null);
 
+  const stopTone = useCallback(() => {
+    if (gainNodeRef.current && audioContextRef.current) {
+        const ctx = audioContextRef.current;
+        gainNodeRef.current.gain.cancelScheduledValues(ctx.currentTime);
+        gainNodeRef.current.gain.setValueAtTime(gainNodeRef.current.gain.value, ctx.currentTime);
+        gainNodeRef.current.gain.linearRampToValueAtTime(0, ctx.currentTime + 0.1);
+
+        setTimeout(() => {
+            if (oscillatorRef.current) {
+                try { oscillatorRef.current.stop(); } catch {}
+                oscillatorRef.current.disconnect();
+            }
+            if (gainNodeRef.current) gainNodeRef.current.disconnect();
+            if (audioContextRef.current) audioContextRef.current.close();
+
+            oscillatorRef.current = null;
+            gainNodeRef.current = null;
+            audioContextRef.current = null;
+        }, 150);
+    } else {
+        setIsPlaying(false);
+    }
+    setIsPlaying(false);
+  }, []);
+
   // Stop sound on unmount
   useEffect(() => {
     return () => {
       stopTone();
     };
-  }, []);
+  }, [stopTone]);
 
   // Update frequency when settings change or note selection changes
   useEffect(() => {
@@ -31,7 +56,7 @@ export default function ToneGeneratorScreen() {
       if (note) {
           setFrequency(note.freq);
       }
-  }, [selectedNoteName, selectedOctave, tunepitch, transpose]);
+  }, [selectedNoteName, selectedOctave, scale]);
 
   // Update oscillator when frequency changes
   useEffect(() => {
@@ -40,7 +65,7 @@ export default function ToneGeneratorScreen() {
       }
   }, [frequency]);
 
-  const startTone = () => {
+  const startTone = useCallback(() => {
     if (Platform.OS !== 'web') {
         alert("Tone Generator currently only supported on Web.");
         return;
@@ -66,49 +91,24 @@ export default function ToneGeneratorScreen() {
         oscillatorRef.current = osc;
         gainNodeRef.current = gain;
         setIsPlaying(true);
-    } catch (e) {
-        console.error(e);
+    } catch {
+        console.error("Failed to start tone generator");
     }
-  };
+  }, [frequency]);
 
-  const stopTone = () => {
-    if (gainNodeRef.current && audioContextRef.current) {
-        const ctx = audioContextRef.current;
-        gainNodeRef.current.gain.cancelScheduledValues(ctx.currentTime);
-        gainNodeRef.current.gain.setValueAtTime(gainNodeRef.current.gain.value, ctx.currentTime);
-        gainNodeRef.current.gain.linearRampToValueAtTime(0, ctx.currentTime + 0.1);
-
-        setTimeout(() => {
-            if (oscillatorRef.current) {
-                try { oscillatorRef.current.stop(); } catch(e){}
-                oscillatorRef.current.disconnect();
-            }
-            if (gainNodeRef.current) gainNodeRef.current.disconnect();
-            if (audioContextRef.current) audioContextRef.current.close();
-
-            oscillatorRef.current = null;
-            gainNodeRef.current = null;
-            audioContextRef.current = null;
-        }, 150);
-    } else {
-        setIsPlaying(false);
-    }
-    setIsPlaying(false);
-  };
-
-  const toggleTone = () => {
+  const toggleTone = useCallback(() => {
       if (isPlaying) stopTone();
       else startTone();
-  };
+  }, [isPlaying, stopTone, startTone]);
 
-  const handleFreqChange = (text: string) => {
+  const handleFreqChange = useCallback((text: string) => {
       const val = parseFloat(text);
       if (!isNaN(val)) {
           setFrequency(val);
           // Deselect note if manual entry?
           // For now, keep it simple.
       }
-  };
+  }, []);
 
   return (
     <SafeAreaView className="flex-1 bg-white dark:bg-slate-900">
