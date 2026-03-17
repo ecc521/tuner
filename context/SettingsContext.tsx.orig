@@ -1,14 +1,11 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useColorScheme } from 'nativewind';
 
 interface SettingsContextType {
   tunepitch: number;
   setTunepitch: (value: number) => void;
   transpose: number;
   setTranspose: (value: number) => void;
-  themePreference: 'light' | 'dark' | 'system';
-  setThemePreference: (value: 'light' | 'dark' | 'system') => void;
   loading: boolean;
 }
 
@@ -17,8 +14,6 @@ const SettingsContext = createContext<SettingsContextType>({
   setTunepitch: () => {},
   transpose: 0,
   setTranspose: () => {},
-  themePreference: 'system',
-  setThemePreference: () => {},
   loading: true,
 });
 
@@ -46,7 +41,7 @@ export const SettingsProvider: React.FC<{children: React.ReactNode}> = ({ childr
       }
     };
     loadSettings();
-  }, [setColorScheme]);
+  }, []);
 
   const setTunepitch = async (value: number) => {
     if (value === tunepitch) return;
@@ -60,15 +55,8 @@ export const SettingsProvider: React.FC<{children: React.ReactNode}> = ({ childr
     await AsyncStorage.setItem('transpose', String(value));
   };
 
-  const setThemePreference = async (value: 'light' | 'dark' | 'system') => {
-    if (value === themePreference) return;
-    setThemePreferenceState(value);
-    setColorScheme(value);
-    await AsyncStorage.setItem('theme', value);
-  };
-
   return (
-    <SettingsContext.Provider value={{ tunepitch, setTunepitch, transpose, setTranspose, themePreference, setThemePreference, loading }}>
+    <SettingsContext.Provider value={{ tunepitch, setTunepitch, transpose, setTranspose, loading }}>
       {children}
     </SettingsContext.Provider>
   );
