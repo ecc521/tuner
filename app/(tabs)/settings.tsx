@@ -3,27 +3,10 @@ import { View, Text, TextInput, TouchableOpacity, ScrollView } from 'react-nativ
 import { useSettings } from '../../context/SettingsContext';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Link } from 'expo-router';
-import { useColorScheme } from 'nativewind';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function SettingsScreen() {
-  const { tunepitch, setTunepitch, transpose, setTranspose, loading } = useSettings();
+  const { tunepitch, setTunepitch, transpose, setTranspose, themePreference, setThemePreference, loading } = useSettings();
   const [localTunepitch, setLocalTunepitch] = useState(String(tunepitch));
-  const { setColorScheme } = useColorScheme();
-  const [themePreference, setThemePreference] = useState<'light' | 'dark' | 'system'>('system');
-
-  useEffect(() => {
-    (async () => {
-       try {
-         const saved = await AsyncStorage.getItem('theme');
-         if (saved) {
-             setThemePreference(saved as any);
-         }
-       } catch (e) {
-           console.log("Failed to load theme preference");
-       }
-    })();
-  }, []);
 
   useEffect(() => {
       setLocalTunepitch(String(tunepitch));
@@ -56,10 +39,8 @@ export default function SettingsScreen() {
       }
   };
 
-  const handleThemeChange = async (newTheme: 'light' | 'dark' | 'system') => {
+  const handleThemeChange = (newTheme: 'light' | 'dark' | 'system') => {
       setThemePreference(newTheme);
-      setColorScheme(newTheme);
-      await AsyncStorage.setItem('theme', newTheme);
   };
 
   if (loading) {
