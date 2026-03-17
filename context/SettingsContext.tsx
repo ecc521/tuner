@@ -27,10 +27,12 @@ export const SettingsProvider: React.FC<{children: React.ReactNode}> = ({ childr
   useEffect(() => {
     const loadSettings = async () => {
       try {
-        const storedTunepitch = await AsyncStorage.getItem('tunepitch');
-        if (storedTunepitch) setTunepitchState(Number(storedTunepitch));
+        const [storedTunepitch, storedTranspose] = await Promise.all([
+          AsyncStorage.getItem('tunepitch'),
+          AsyncStorage.getItem('transpose'),
+        ]);
 
-        const storedTranspose = await AsyncStorage.getItem('transpose');
+        if (storedTunepitch) setTunepitchState(Number(storedTunepitch));
         if (storedTranspose) setTransposeState(Number(storedTranspose));
       } catch (e) {
         console.error("Failed to load settings", e);
