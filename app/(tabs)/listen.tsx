@@ -1,12 +1,16 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import { View, Text, TextInput, TouchableOpacity, ScrollView, Platform, StyleSheet } from 'react-native';
 import { useSettings } from '../../context/SettingsContext';
 import { getScale, getNoteFromName, Note, ScaleNote } from '../../utils/noteUtils';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
+/**
+ * A screen component that acts as a Tone Generator.
+ * It allows users to play an exact frequency based on a selected scale, note, and octave.
+ */
 export default function ToneGeneratorScreen() {
   const { tunepitch, transpose } = useSettings();
-  const scale = getScale(tunepitch, transpose);
+  const scale = useMemo(() => getScale(tunepitch, transpose), [tunepitch, transpose]);
 
   const [frequency, setFrequency] = useState<number>(440);
   const [selectedNoteName, setSelectedNoteName] = useState<string>("A");
@@ -40,7 +44,11 @@ export default function ToneGeneratorScreen() {
       }
   }, [frequency]);
 
-  const startTone = () => {
+  /**
+   * Starts playing the current frequency using the Web Audio API.
+   * Currently, this feature is supported only on web platforms.
+   */
+  const startTone = useCallback(() => {
     if (Platform.OS !== 'web') {
         alert("Tone Generator currently only supported on Web.");
         return;
@@ -66,12 +74,16 @@ export default function ToneGeneratorScreen() {
         oscillatorRef.current = osc;
         gainNodeRef.current = gain;
         setIsPlaying(true);
-    } catch (e) {
-        console.error(e);
+    } catch {
+        console.error("Failed to start tone generator.");
     }
-  };
+  }, [frequency]);
 
-  const stopTone = () => {
+  /**
+   * Fades out and stops the currently playing tone, if any.
+   * Also cleans up audio context resources.
+   */
+  const stopTone = useCallback(() => {
     if (gainNodeRef.current && audioContextRef.current) {
         const ctx = audioContextRef.current;
         gainNodeRef.current.gain.cancelScheduledValues(ctx.currentTime);
@@ -80,7 +92,7 @@ export default function ToneGeneratorScreen() {
 
         setTimeout(() => {
             if (oscillatorRef.current) {
-                try { oscillatorRef.current.stop(); } catch(e){}
+                try { oscillatorRef.current.stop(); } catch {}
                 oscillatorRef.current.disconnect();
             }
             if (gainNodeRef.current) gainNodeRef.current.disconnect();
@@ -94,21 +106,29 @@ export default function ToneGeneratorScreen() {
         setIsPlaying(false);
     }
     setIsPlaying(false);
-  };
+  }, []);
 
-  const toggleTone = () => {
+  /**
+   * Toggles the audio playback on or off.
+   */
+  const toggleTone = useCallback(() => {
       if (isPlaying) stopTone();
       else startTone();
-  };
+  }, [isPlaying, startTone, stopTone]);
 
-  const handleFreqChange = (text: string) => {
+  /**
+   * Handles manual changes to the frequency input field.
+   * 
+   * @param text - The new frequency as a string.
+   */
+  const handleFreqChange = useCallback((text: string) => {
       const val = parseFloat(text);
       if (!isNaN(val)) {
           setFrequency(val);
           // Deselect note if manual entry?
           // For now, keep it simple.
       }
-  };
+  }, []);
 
   return (
     <SafeAreaView className="flex-1 bg-white dark:bg-slate-900">
