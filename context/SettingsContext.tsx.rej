@@ -1,0 +1,32 @@
+--- context/SettingsContext.tsx
++++ context/SettingsContext.tsx
+@@ -27,16 +32,26 @@ export const useSettings = () => useContext(SettingsContext);
+ export const SettingsProvider: React.FC<{children: React.ReactNode}> = ({ children }) => {
+   const [tunepitch, setTunepitchState] = useState(440);
+   const [transpose, setTransposeState] = useState(0);
++  const [themePreference, setThemePreferenceState] = useState<'light' | 'dark' | 'system'>('system');
+   const [loading, setLoading] = useState(true);
++  const { setColorScheme } = useColorScheme();
+ 
+   useEffect(() => {
+     const loadSettings = async () => {
+       try {
+-        const storedTunepitch = await AsyncStorage.getItem('tunepitch');
+-        if (storedTunepitch) setTunepitchState(Number(storedTunepitch));
++        const [storedTunepitch, storedTranspose, storedTheme] = await Promise.all([
++          AsyncStorage.getItem('tunepitch'),
++          AsyncStorage.getItem('transpose'),
++          AsyncStorage.getItem('theme'),
++        ]);
+ 
+-        const storedTranspose = await AsyncStorage.getItem('transpose');
++        if (storedTunepitch) setTunepitchState(Number(storedTunepitch));
+         if (storedTranspose) setTransposeState(Number(storedTranspose));
++        if (storedTheme) {
++          const theme = storedTheme as 'light' | 'dark' | 'system';
++          setThemePreferenceState(theme);
++          setColorScheme(theme);
++        }
+       } catch (e) {
+         console.error("Failed to load settings", e);
+       } finally {
