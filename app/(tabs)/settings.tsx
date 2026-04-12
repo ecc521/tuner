@@ -19,9 +19,7 @@ export default function SettingsScreen() {
          if (saved) {
              setThemePreference(saved as any);
          }
-       } catch (e) {
-           console.log("Failed to load theme preference");
-       }
+       } catch { }
     })();
   }, []);
 

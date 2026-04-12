@@ -31,9 +31,7 @@ export default function TunerScreen() {
                 if (result.state === 'granted') {
                     await startListening();
                 }
-            } catch (e) {
-                console.log("Permission check skipped or failed", e);
-            }
+            } catch { }
         }
     };
 
@@ -69,9 +67,7 @@ export default function TunerScreen() {
       if (ctx.state === 'suspended') {
         try {
             await ctx.resume();
-        } catch (e) {
-            console.log("AudioContext resume failed", e);
-        }
+        } catch { }
       }
 
       if (ctx.state === 'suspended') {
@@ -79,7 +75,6 @@ export default function TunerScreen() {
         // Clean up and return false (did not start)
         source.disconnect();
         ctx.close();
-        console.log("AudioContext suspended. User gesture required.");
         return;
       }
 

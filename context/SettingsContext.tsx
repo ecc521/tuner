@@ -34,8 +34,8 @@ export const SettingsProvider: React.FC<{children: React.ReactNode}> = ({ childr
 
         if (storedTunepitch) setTunepitchState(Number(storedTunepitch));
         if (storedTranspose) setTransposeState(Number(storedTranspose));
-      } catch (e) {
-        console.error("Failed to load settings", e);
+      } catch {
+        console.error("Failed to load settings");
       } finally {
         setLoading(false);
       }
