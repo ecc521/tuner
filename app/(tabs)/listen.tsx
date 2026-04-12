@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { View, Text, TextInput, TouchableOpacity, ScrollView, Platform, StyleSheet } from 'react-native';
 import { useSettings } from '../../context/SettingsContext';
 import { getScale, getNoteFromName, Note, ScaleNote } from '../../utils/noteUtils';
@@ -6,7 +6,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function ToneGeneratorScreen() {
   const { tunepitch, transpose } = useSettings();
-  const scale = getScale(tunepitch, transpose);
+  const scale = useMemo(() => getScale(tunepitch, transpose), [tunepitch, transpose]);
 
   const [frequency, setFrequency] = useState<number>(440);
   const [selectedNoteName, setSelectedNoteName] = useState<string>("A");
