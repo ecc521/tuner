@@ -42,8 +42,8 @@ export default function RootLayout() {
         if (theme) {
           setColorScheme(theme as 'light' | 'dark' | 'system');
         }
-      } catch (e) {
-        console.error('Failed to load theme preference', e);
+      } catch {
+        console.error('Failed to load theme preference');
       } finally {
         setIsColorSchemeLoaded(true);
       }

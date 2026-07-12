@@ -66,8 +66,8 @@ export default function ToneGeneratorScreen() {
         oscillatorRef.current = osc;
         gainNodeRef.current = gain;
         setIsPlaying(true);
-    } catch (e) {
-        console.error(e);
+    } catch {
+        console.error("Failed to start tone");
     }
   };
 
